@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(node --version:*)",
+      "Bash(npm:*)",
+      "WebFetch(domain:authjs.dev)",
+      "Bash(npx create-next-app@14:*)",
+      "Bash(npx shadcn@latest add button card input label dialog table tabs select textarea badge progress dropdown-menu sheet separator avatar checkbox --yes)",
+      "Bash(npx prisma generate:*)",
+      "Bash(node -e:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx next build:*)",
+      "Bash(npx prisma db pull:*)",
+      "Bash(npx prisma:*)",
+      "Bash(npx tsx:*)",
+      "Bash(claude mcp add:*)",
+      "Bash(where:*)",
+      "Bash(nslookup:*)",
+      "Bash(timeout:*)",
+      "Bash(netstat:*)"
+    ]
+  }
+}

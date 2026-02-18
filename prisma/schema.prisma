@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  ADMIN
+  STAFF
+}
+
+model Organization {
+  id        String    @id @default(cuid())
+  name      String
+  createdAt DateTime  @default(now())
+  users     User[]
+  patients  Patient[]
+}
+
+model User {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  email          String       @unique
+  passwordHash   String
+  name           String
+  role           Role         @default(STAFF)
+  isActive       Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  mealPlans      MealPlan[]
+
+  @@index([organizationId])
+  @@index([email])
+}
+
+model Patient {
+  id             String        @id @default(cuid())
+  organizationId String
+  organization   Organization  @relation(fields: [organizationId], references: [id])
+  pseudonym      String
+  birthYear      Int
+  currentWeight  Decimal       @db.Decimal(5, 2)
+  targetWeight   Decimal       @db.Decimal(5, 2)
+  allergies      String[]
+  notes          String?
+  isActive       Boolean       @default(true)
+  weightHistory  WeightEntry[]
+  mealPlans      MealPlan[]
+  createdAt      DateTime      @default(now())
+  createdBy      String
+
+  @@index([organizationId])
+}
+
+model WeightEntry {
+  id         String   @id @default(cuid())
+  patientId  String
+  patient    Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  weightKg   Decimal  @db.Decimal(5, 2)
+  recordedAt DateTime @default(now())
+  recordedBy String
+
+  @@index([patientId])
+}
+
+model MealPlan {
+  id            String        @id @default(cuid())
+  patientId     String
+  patient       Patient       @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  weekStart     DateTime
+  planJson      Json
+  totalKcal     Int
+  promptUsed    String        @db.Text
+  createdBy     String
+  createdByUser User          @relation(fields: [createdBy], references: [id])
+  shoppingList  ShoppingList?
+  createdAt     DateTime      @default(now())
+
+  @@index([patientId])
+  @@index([createdBy])
+}
+
+model ShoppingList {
+  id         String   @id @default(cuid())
+  mealPlanId String   @unique
+  mealPlan   MealPlan @relation(fields: [mealPlanId], references: [id], onDelete: Cascade)
+  itemsJson  Json
+  createdAt  DateTime @default(now())
+}

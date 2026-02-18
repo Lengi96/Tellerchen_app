@@ -1,0 +1,38 @@
+import { redirect } from "next/navigation";
+import { auth } from "@/server/auth";
+import { Sidebar } from "@/components/layout/Sidebar";
+import { TopBar } from "@/components/layout/TopBar";
+import { TRPCProvider } from "@/trpc/client";
+import { SessionProvider } from "@/components/providers/SessionProvider";
+
+export default async function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const session = await auth();
+
+  if (!session?.user) {
+    redirect("/login");
+  }
+
+  const user = {
+    name: session.user.name,
+    email: session.user.email,
+    role: session.user.role,
+  };
+
+  return (
+    <SessionProvider>
+      <TRPCProvider>
+        <div className="min-h-screen bg-background">
+          <Sidebar user={user} />
+          <div className="lg:pl-64">
+            <TopBar user={user} />
+            <main className="p-6">{children}</main>
+          </div>
+        </div>
+      </TRPCProvider>
+    </SessionProvider>
+  );
+}
