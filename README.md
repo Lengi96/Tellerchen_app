@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NutriKompass
 
-## Getting Started
+KI-gestuetzte Ernaehrungsplanung fuer Einrichtungen, die Jugendliche mit Essstoerungen betreuen.
 
-First, run the development server:
+## Features
 
+- Individuelle 7-Tage-Ernaehrungsplaene
+- Automatische Einkaufslisten
+- PDF-Export fuer Plaene und Listen
+- Dashboard fuer Patienten, Plaene und Organisation
+- Authentifizierung mit NextAuth
+- Datenpersistenz mit Prisma + PostgreSQL (z. B. Supabase)
+
+## Tech Stack
+
+- Next.js 14 (App Router)
+- TypeScript
+- tRPC
+- Prisma
+- NextAuth
+- Tailwind CSS
+- OpenAI API
+
+## Voraussetzungen
+
+- Node.js 20+
+- npm 10+
+- PostgreSQL-Datenbank
+- OpenAI API Key
+
+## Setup (lokal)
+
+1. Abhaengigkeiten installieren:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Umgebungsvariablen setzen:
+```bash
+cp .env.example .env
+```
+Dann Werte in `.env` eintragen.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Prisma-Client generieren:
+```bash
+npm run db:generate
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Datenbank migrieren (dev):
+```bash
+npm run db:migrate
+```
 
-## Learn More
+5. Dev-Server starten:
+```bash
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+App: `http://localhost:3000`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Verfuegbare Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `npm run dev` - Next.js Dev Server
+- `npm run build` - Production Build
+- `npm run start` - Production Server
+- `npm run lint` - ESLint
+- `npm run db:generate` - Prisma Client generieren
+- `npm run db:migrate` - Prisma Migrationen (dev)
+- `npm run db:push` - Schema in DB pushen
+- `npm run db:seed` - Seed Script ausfuehren
+- `npm run db:studio` - Prisma Studio
 
-## Deploy on Vercel
+## Sicherheit & Datenschutz
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Keine echten Patientennamen im Klartext verwenden
+- API-Keys niemals committen
+- Vor Deployment produktive Secrets setzen
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Contributing
+
+Bitte lies zuerst `CONTRIBUTING.md`.
+
+## Lizenz
+
+Dieses Projekt steht unter der MIT-Lizenz. Siehe `LICENSE`.

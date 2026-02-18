@@ -1,0 +1,26 @@
+name: Feature Request
+description: Schlage eine Verbesserung fuer NutriKompass vor
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / Bedarf
+      description: Welches Problem soll geloest werden?
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Vorgeschlagene Loesung
+      description: Wie soll die Funktion aussehen?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternativen
+      description: Welche Alternativen hast du geprueft?
+    validations:
+      required: false
