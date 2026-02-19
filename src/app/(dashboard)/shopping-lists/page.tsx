@@ -6,8 +6,10 @@ import { trpc } from "@/trpc/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Loader2, ShoppingCart, CalendarDays, List } from "lucide-react";
+import { Loader2, ShoppingCart, CalendarDays, List, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface ShoppingItem {
   name: string;
@@ -26,10 +28,10 @@ const categoryEmojis: Record<string, string> = {
 
 const CATEGORY_ORDER = ["Gemüse & Obst", "Protein", "Milchprodukte", "Kohlenhydrate", "Sonstiges"];
 
-/** ISO-Montag der Woche des übergebenen Datums */
+/** ISO-Montag der Woche des übergebenen Datums (UTC-sicher) */
 function getMondayOf(date: Date): Date {
   const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
-  const day = d.getUTCDay() || 7; // 1=Mo … 7=So
+  const day = d.getUTCDay() || 7;
   d.setUTCDate(d.getUTCDate() - day + 1);
   return d;
 }
@@ -40,6 +42,11 @@ function getWeekNumber(date: Date): number {
   d.setUTCDate(d.getUTCDate() + 4 - dayNum);
   const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
   return Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+}
+
+/** Montag einer Woche → ISO-Date-String YYYY-MM-DD */
+function toIso(date: Date): string {
+  return date.toISOString().slice(0, 10);
 }
 
 /** Alle itemsJson mehrerer Listen zusammenführen (Mengen addieren) */
@@ -81,53 +88,91 @@ function aggregateLists(lists: { itemsJson: unknown }[]): Record<string, Shoppin
   return grouped;
 }
 
-type WeekFilter = "this" | "next" | "all";
+type ViewMode = "week" | "all";
 
 export default function ShoppingListsPage() {
-  const [weekFilter, setWeekFilter] = useState<WeekFilter>("this");
+  const [viewMode, setViewMode] = useState<ViewMode>("week");
+
+  // Aktuelle Woche als Startpunkt
+  const todayMonday = useMemo(() => getMondayOf(new Date()), []);
+
+  // Ausgewählte Woche (Montag), default = diese Woche
+  const [selectedMonday, setSelectedMonday] = useState<Date>(todayMonday);
 
   const {
     data: lists,
     isLoading,
     error,
     refetch,
-  } = trpc.shoppingList.list.useQuery(
-    { limit: 200 },
-    { retry: 1 }
-  );
+  } = trpc.shoppingList.list.useQuery({ limit: 200 }, { retry: 1 });
 
-  // Wochenanfänge berechnen
-  const thisMonday = getMondayOf(new Date());
-  const nextMonday = new Date(thisMonday);
-  nextMonday.setUTCDate(nextMonday.getUTCDate() + 7);
+  // Woche vor/zurück navigieren
+  function shiftWeek(delta: number) {
+    setSelectedMonday((prev) => {
+      const d = new Date(prev);
+      d.setUTCDate(d.getUTCDate() + delta * 7);
+      return d;
+    });
+  }
 
-  const isoThis = thisMonday.toISOString().slice(0, 10);
-  const isoNext = nextMonday.toISOString().slice(0, 10);
+  // Datum-Input (type=week) → Montag der ausgewählten Woche
+  function handleWeekInput(value: string) {
+    if (!value) return;
+    // value = "2025-W08" → Montag dieser Woche
+    const [yearStr, weekStr] = value.split("-W");
+    const year = parseInt(yearStr, 10);
+    const week = parseInt(weekStr, 10);
+    // ISO-Wochennummer → Montag berechnen
+    const jan4 = new Date(Date.UTC(year, 0, 4)); // 4. Jan ist immer in KW1
+    const startOfWeek1 = getMondayOf(jan4);
+    const targetMonday = new Date(startOfWeek1);
+    targetMonday.setUTCDate(startOfWeek1.getUTCDate() + (week - 1) * 7);
+    setSelectedMonday(targetMonday);
+  }
 
-  // Gefilterte Listen
+  // Aktueller KW-Wert für input[type=week]
+  const weekInputValue = useMemo(() => {
+    const kw = getWeekNumber(selectedMonday);
+    const year = selectedMonday.getUTCFullYear();
+    // Sonderfall: KW 52/53 kann zum nächsten Jahr gehören
+    const kwStr = String(kw).padStart(2, "0");
+    return `${year}-W${kwStr}`;
+  }, [selectedMonday]);
+
+  const selectedIso = toIso(selectedMonday);
+  const isThisWeek = selectedIso === toIso(todayMonday);
+  const nextMonday = new Date(todayMonday);
+  nextMonday.setUTCDate(todayMonday.getUTCDate() + 7);
+  const isNextWeek = selectedIso === toIso(nextMonday);
+
+  // Gefilterte Listen für ausgewählte Woche
   const filteredLists = useMemo(() => {
     if (!lists) return [];
-    if (weekFilter === "all") return lists;
-    const targetIso = weekFilter === "this" ? isoThis : isoNext;
+    if (viewMode === "all") return lists;
     return lists.filter((l) => {
       const ws = new Date(l.mealPlan.weekStart);
-      const monday = getMondayOf(ws);
-      return monday.toISOString().slice(0, 10) === targetIso;
+      return toIso(getMondayOf(ws)) === selectedIso;
     });
-  }, [lists, weekFilter, isoThis, isoNext]);
+  }, [lists, viewMode, selectedIso]);
 
   // Aggregierte Wochenansicht
   const aggregated = useMemo(() => {
-    if (weekFilter === "all") return null;
+    if (viewMode === "all") return null;
     return aggregateLists(filteredLists);
-  }, [filteredLists, weekFilter]);
+  }, [filteredLists, viewMode]);
 
   const totalAggregatedItems = aggregated
     ? Object.values(aggregated).reduce((s, arr) => s + arr.length, 0)
     : 0;
 
-  const thisWeekKW = getWeekNumber(thisMonday);
-  const nextWeekKW = getWeekNumber(nextMonday);
+  const selectedKW = getWeekNumber(selectedMonday);
+
+  // Label für aktuelle Auswahl
+  const weekLabel = isThisWeek
+    ? `Diese Woche (KW ${selectedKW})`
+    : isNextWeek
+    ? `Nächste Woche (KW ${selectedKW})`
+    : `KW ${selectedKW} / ${selectedMonday.getUTCFullYear()}`;
 
   return (
     <div className="space-y-6">
@@ -138,36 +183,78 @@ export default function ShoppingListsPage() {
         </p>
       </div>
 
-      {/* Wochenfilter */}
-      <div className="flex gap-2 flex-wrap">
+      {/* Ansicht-Wechsler */}
+      <div className="flex flex-wrap gap-2 items-center">
         <Button
-          variant={weekFilter === "this" ? "default" : "outline"}
+          variant={viewMode === "week" ? "default" : "outline"}
           size="sm"
           className="rounded-xl"
-          onClick={() => setWeekFilter("this")}
+          onClick={() => { setViewMode("week"); setSelectedMonday(todayMonday); }}
         >
           <CalendarDays className="mr-2 h-4 w-4" />
-          Diese Woche (KW {thisWeekKW})
+          Wochenansicht
         </Button>
         <Button
-          variant={weekFilter === "next" ? "default" : "outline"}
+          variant={viewMode === "all" ? "default" : "outline"}
           size="sm"
           className="rounded-xl"
-          onClick={() => setWeekFilter("next")}
-        >
-          <CalendarDays className="mr-2 h-4 w-4" />
-          Nächste Woche (KW {nextWeekKW})
-        </Button>
-        <Button
-          variant={weekFilter === "all" ? "default" : "outline"}
-          size="sm"
-          className="rounded-xl"
-          onClick={() => setWeekFilter("all")}
+          onClick={() => setViewMode("all")}
         >
           <List className="mr-2 h-4 w-4" />
           Alle
         </Button>
       </div>
+
+      {/* Wochennavigation (nur im Wochenmodus) */}
+      {viewMode === "week" && (
+        <div className="flex flex-wrap items-end gap-3">
+          {/* Schnellauswahl */}
+          <div className="flex gap-1">
+            <Button
+              variant={isThisWeek ? "default" : "outline"}
+              size="sm"
+              className="rounded-xl text-xs"
+              onClick={() => setSelectedMonday(todayMonday)}
+            >
+              Diese Woche
+            </Button>
+            <Button
+              variant={isNextWeek ? "default" : "outline"}
+              size="sm"
+              className="rounded-xl text-xs"
+              onClick={() => setSelectedMonday(new Date(nextMonday))}
+            >
+              Nächste Woche
+            </Button>
+          </div>
+
+          {/* Pfeil-Navigation */}
+          <div className="flex items-center gap-1">
+            <Button variant="outline" size="icon" className="rounded-xl h-8 w-8" onClick={() => shiftWeek(-1)}>
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <span className="text-sm font-medium text-text-main min-w-[120px] text-center">
+              {weekLabel}
+            </span>
+            <Button variant="outline" size="icon" className="rounded-xl h-8 w-8" onClick={() => shiftWeek(1)}>
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+
+          {/* Freie Wochenauswahl */}
+          <div className="flex items-end gap-2">
+            <div className="space-y-1">
+              <Label className="text-xs text-muted-foreground">Woche wählen</Label>
+              <Input
+                type="week"
+                value={weekInputValue}
+                onChange={(e) => handleWeekInput(e.target.value)}
+                className="rounded-xl h-8 text-sm w-40"
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {isLoading ? (
         <div className="flex items-center justify-center py-8">
@@ -183,7 +270,7 @@ export default function ShoppingListsPage() {
             </Button>
           </CardContent>
         </Card>
-      ) : weekFilter !== "all" ? (
+      ) : viewMode === "week" ? (
         /* ── Aggregierte Wochenansicht ── */
         <>
           {filteredLists.length === 0 ? (
@@ -191,8 +278,7 @@ export default function ShoppingListsPage() {
               <CardContent className="text-center py-10 text-muted-foreground">
                 <ShoppingCart className="mx-auto h-12 w-12 mb-3 opacity-40" />
                 <p className="font-medium text-text-main">
-                  Keine Einkaufslisten für{" "}
-                  {weekFilter === "this" ? `KW ${thisWeekKW}` : `KW ${nextWeekKW}`}.
+                  Keine Einkaufslisten für {weekLabel}.
                 </p>
                 <p className="text-sm mt-1">
                   Erstellen Sie zuerst Ernährungspläne für diese Woche.
@@ -206,10 +292,8 @@ export default function ShoppingListsPage() {
                 <div className="flex-1">
                   <p className="text-sm text-muted-foreground">
                     Aggregierte Einkaufsliste für{" "}
-                    <span className="font-semibold text-text-main">
-                      KW {weekFilter === "this" ? thisWeekKW : nextWeekKW}
-                    </span>{" "}
-                    –{" "}
+                    <span className="font-semibold text-text-main">{weekLabel}</span>
+                    {" – "}
                     <span className="font-semibold text-text-main">
                       {filteredLists.length} Patient{filteredLists.length !== 1 ? "en" : ""}
                     </span>
