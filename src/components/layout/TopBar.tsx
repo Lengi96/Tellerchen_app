@@ -23,7 +23,7 @@ interface TopBarProps {
 
 const pageTitles: Record<string, string> = {
   "/dashboard": "Dashboard",
-  "/patients": "Patienten",
+  "/patients": "Bewohner:innen",
   "/meal-plans": "Ernährungspläne",
   "/shopping-lists": "Einkaufslisten",
   "/settings": "Einstellungen",
@@ -52,7 +52,7 @@ function getPageTitle(pathname: string): string {
   if (pageTitles[pathname]) return pageTitles[pathname];
 
   // Dynamische Routen
-  if (pathname.startsWith("/patients/")) return "Patientendetails";
+  if (pathname.startsWith("/patients/")) return "Bewohner:in-Details";
   if (pathname.startsWith("/meal-plans/")) return "Ernährungsplan";
   if (pathname.startsWith("/shopping-lists/")) return "Einkaufsliste";
 
@@ -103,7 +103,7 @@ export function TopBar({ user }: TopBarProps) {
             <div className="hidden sm:block text-right">
               <p className="text-sm font-medium text-text-main">{user.name}</p>
               <p className="text-xs text-muted-foreground">
-                {user.role === "ADMIN" ? "Administrator" : "Mitarbeiter"}
+                {user.role === "ADMIN" ? "Administrator:in" : "Mitarbeiter:in"}
               </p>
             </div>
             <Avatar className="h-9 w-9">

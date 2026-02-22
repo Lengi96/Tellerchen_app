@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
@@ -18,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { trpc } from "@/trpc/client";
 
 interface SidebarProps {
   user: {
@@ -30,7 +31,7 @@ interface SidebarProps {
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/patients", label: "Patienten", icon: Users },
+  { href: "/patients", label: "Bewohner:innen", icon: Users },
   { href: "/meal-plans", label: "Ernährungspläne", icon: ClipboardList },
   { href: "/shopping-lists", label: "Einkaufslisten", icon: ShoppingCart },
   { href: "/billing", label: "Abonnement", icon: CreditCard },
@@ -46,12 +47,14 @@ function NavLink({
   icon: Icon,
   isActive,
   onClick,
+  badge,
 }: {
   href: string;
   label: string;
   icon: React.ElementType;
   isActive: boolean;
   onClick?: () => void;
+  badge?: React.ReactNode;
 }) {
   return (
     <Link
@@ -66,7 +69,8 @@ function NavLink({
       )}
     >
       <Icon className="h-5 w-5" />
-      {label}
+      <span className="flex-1">{label}</span>
+      {badge}
     </Link>
   );
 }
@@ -76,6 +80,25 @@ function SidebarContent({
   onNavClick,
 }: SidebarProps & { onNavClick?: () => void }) {
   const pathname = usePathname();
+  const [bannerDismissed, setBannerDismissed] = useState(false);
+
+  // Trial-Badge: Subscription-Daten laden
+  const { data: subscription } = trpc.billing.getSubscription.useQuery();
+
+  // localStorage prüfen für Banner-Dismissed Status
+  useEffect(() => {
+    const stored = localStorage.getItem("trialBannerDismissed");
+    if (stored === "true") {
+      setBannerDismissed(true);
+    }
+  }, []);
+
+  // Trial-Badge berechnen
+  const showTrialBadge =
+    bannerDismissed &&
+    subscription?.subscriptionPlan === "TRIAL" &&
+    !subscription.isTrialExpired &&
+    subscription.trialDaysLeft > 0;
 
   return (
     <div className="flex h-full flex-col">
@@ -99,6 +122,13 @@ function SidebarContent({
                 : pathname.startsWith(item.href)
             }
             onClick={onNavClick}
+            badge={
+              item.href === "/billing" && showTrialBadge ? (
+                <span className="inline-flex items-center rounded-lg bg-yellow-100 px-2 py-0.5 text-xs font-semibold text-yellow-700">
+                  ⚡ {subscription.trialDaysLeft}d
+                </span>
+              ) : undefined
+            }
           />
         ))}
 
@@ -144,7 +174,7 @@ export function Sidebar({ user }: SidebarProps) {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0 border-r bg-surface">
+      <aside className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0 border-r bg-surface overflow-y-auto">
         <SidebarContent user={user} />
       </aside>
 

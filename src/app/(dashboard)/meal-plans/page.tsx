@@ -119,14 +119,14 @@ export default function MealPlansPage() {
               <ClipboardList className="mx-auto h-12 w-12 mb-3 opacity-50" />
               <p>Noch keine Ernährungspläne erstellt.</p>
               <p className="text-sm mt-1">
-                Legen Sie zuerst einen Patienten an, um einen Plan zu erstellen.
+                Legen Sie zuerst eine Bewohner:in an, um einen Plan zu erstellen.
               </p>
             </div>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Patient</TableHead>
+                  <TableHead>Bewohner:in</TableHead>
                   <TableHead>KW</TableHead>
                   <TableHead>Kalorien/Woche</TableHead>
                   <TableHead>Makros/Woche</TableHead>
@@ -166,7 +166,7 @@ export default function MealPlansPage() {
                           <Wheat className="h-3 w-3" />
                           {macros.carbs} g Kohlenhydrate
                         </span>
-                        <span className="flex items-center gap-1 text-rose-500">
+                        <span className="flex items-center gap-1 text-amber-600">
                           <Droplets className="h-3 w-3" />
                           {macros.fat} g Fett
                         </span>
@@ -207,7 +207,7 @@ export default function MealPlansPage() {
       <Dialog open={patientSelectOpen} onOpenChange={setPatientSelectOpen}>
         <DialogContent className="max-w-xl rounded-xl">
           <DialogHeader>
-            <DialogTitle>Patient auswählen</DialogTitle>
+            <DialogTitle>Bewohner:in auswählen</DialogTitle>
             <DialogDescription>
               Für wen soll der neue Ernährungsplan erstellt werden?
             </DialogDescription>
@@ -219,10 +219,10 @@ export default function MealPlansPage() {
             </div>
           ) : !patients || patients.length === 0 ? (
             <div className="space-y-3 text-sm text-muted-foreground">
-              <p>Es sind noch keine aktiven Patienten vorhanden.</p>
+              <p>Es sind noch keine Bewohner:innen vorhanden.</p>
               <Link href="/patients" onClick={() => setPatientSelectOpen(false)}>
                 <Button variant="outline" className="rounded-xl">
-                  Zu den Patienten
+                  Zu den Bewohner:innen
                 </Button>
               </Link>
             </div>

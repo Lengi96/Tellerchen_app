@@ -21,6 +21,7 @@ import {
   Beef,
   Wheat,
   Droplets,
+  Handshake,
 } from "lucide-react";
 import { toast } from "sonner";
 import type { MealPlanData } from "@/lib/openai/nutritionPrompt";
@@ -141,7 +142,7 @@ export default function MealPlanDetailPage() {
         className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-text-main"
       >
         <ArrowLeft className="h-4 w-4" />
-        Zurück zum Patienten
+        Zurück zur Bewohner:in
       </Link>
 
       {/* Plan-Header */}
@@ -240,12 +241,42 @@ export default function MealPlanDetailPage() {
             </Badge>
             <Badge
               variant="secondary"
-              className="rounded-xl bg-rose-50 text-rose-500 text-sm px-3 py-1 flex items-center gap-1"
+              className="rounded-xl bg-amber-50 text-amber-600 text-sm px-3 py-1 flex items-center gap-1"
             >
               <Droplets className="h-3.5 w-3.5" />
               Ø {avgMacros.fat}g F / {Math.round(weekMacros.fat)}g/Wo
             </Badge>
           </div>
+          {(() => {
+            const ag = plan.patient.autonomyAgreement;
+            if (ag) {
+              const parts: string[] = [];
+              if (ag.canPortionIndependent) {
+                parts.push("Darf vollständig eigenständig portionieren");
+              } else if (ag.canPortionSupervised) {
+                parts.push("Darf unter Aufsicht portionieren");
+              }
+              if (ag.notes) parts.push(ag.notes);
+              if (parts.length > 0) {
+                return (
+                  <div className="mt-3 flex items-start gap-2 rounded-xl bg-violet-50 px-3 py-2 text-sm text-violet-700">
+                    <Handshake className="h-4 w-4 mt-0.5 shrink-0" />
+                    <span><span className="font-medium">Absprachen:</span> {parts.join(". ")}</span>
+                  </div>
+                );
+              }
+            }
+            // Legacy-Fallback
+            if (plan.patient.autonomyNotes) {
+              return (
+                <div className="mt-3 flex items-start gap-2 rounded-xl bg-violet-50 px-3 py-2 text-sm text-violet-700">
+                  <Handshake className="h-4 w-4 mt-0.5 shrink-0" />
+                  <span><span className="font-medium">Absprachen:</span> {plan.patient.autonomyNotes}</span>
+                </div>
+              );
+            }
+            return null;
+          })()}
         </CardContent>
       </Card>
 
@@ -272,7 +303,7 @@ export default function MealPlanDetailPage() {
                   <Badge variant="secondary" className="rounded-xl bg-amber-50 text-amber-600 text-xs px-2 py-0.5 flex items-center gap-1">
                     <Wheat className="h-3 w-3" />{dayCarbs}g
                   </Badge>
-                  <Badge variant="secondary" className="rounded-xl bg-rose-50 text-rose-500 text-xs px-2 py-0.5 flex items-center gap-1">
+                  <Badge variant="secondary" className="rounded-xl bg-amber-50 text-amber-600 text-xs px-2 py-0.5 flex items-center gap-1">
                     <Droplets className="h-3 w-3" />{dayFat}g
                   </Badge>
                 </div>

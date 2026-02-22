@@ -168,7 +168,7 @@ export default function SettingsPage() {
   const updateRoleMutation = trpc.staff.updateRole.useMutation({
     onSuccess: (data) => {
       toast.success(
-        `Rolle von ${data.name} wurde zu ${data.role === "ADMIN" ? "Administrator" : "Mitarbeiter"} geändert.`
+        `Rolle von ${data.name} wurde zu ${data.role === "ADMIN" ? "Administrator:in" : "Mitarbeiter:in"} geändert.`
       );
       utils.staff.list.invalidate();
     },
@@ -283,7 +283,7 @@ export default function SettingsPage() {
       <div>
         <h2 className="text-2xl font-bold text-text-main">Einstellungen</h2>
         <p className="text-muted-foreground">
-          Verwaltung der Einrichtung und Mitarbeiter
+          Verwaltung der Einrichtung und Mitarbeiter:innen
         </p>
       </div>
 
@@ -291,7 +291,7 @@ export default function SettingsPage() {
         <TabsList className="rounded-xl">
           <TabsTrigger value="staff" className="rounded-xl">
             <Users className="mr-2 h-4 w-4" />
-            Mitarbeiter
+            Mitarbeiter:innen
           </TabsTrigger>
           <TabsTrigger value="organization" className="rounded-xl">
             <Building2 className="mr-2 h-4 w-4" />
@@ -312,10 +312,10 @@ export default function SettingsPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="text-text-main">
-                    Mitarbeiter verwalten
+                    Mitarbeiter:innen verwalten
                   </CardTitle>
                   <CardDescription>
-                    Übersicht aller Mitarbeiter Ihrer Einrichtung
+                    Übersicht aller Mitarbeiter:innen Ihrer Einrichtung
                   </CardDescription>
                 </div>
                 <Button
@@ -323,7 +323,7 @@ export default function SettingsPage() {
                   onClick={() => setInviteOpen(true)}
                 >
                   <UserPlus className="mr-2 h-4 w-4" />
-                  Mitarbeiter einladen
+                  Mitarbeiter:in einladen
                 </Button>
               </div>
             </CardHeader>
@@ -331,7 +331,7 @@ export default function SettingsPage() {
               {staffLoading ? (
                 <div className="flex items-center justify-center py-8 text-muted-foreground">
                   <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Lade Mitarbeiter…
+                  Lade Mitarbeiter:innen…
                 </div>
               ) : (
                 <Table>
@@ -367,8 +367,8 @@ export default function SettingsPage() {
                               }
                             >
                               {member.role === "ADMIN"
-                                ? "Administrator"
-                                : "Mitarbeiter"}
+                                ? "Administrator:in"
+                                : "Mitarbeiter:in"}
                             </Badge>
                           </TableCell>
                           <TableCell>
@@ -415,7 +415,7 @@ export default function SettingsPage() {
                                   >
                                     <Shield className="mr-2 h-4 w-4" />
                                     {member.role === "ADMIN"
-                                      ? "Zu Mitarbeiter ändern"
+                                      ? "Zu Mitarbeiter:in ändern"
                                       : "Zum Admin befördern"}
                                   </DropdownMenuItem>
                                   <DropdownMenuSeparator />
@@ -639,7 +639,7 @@ export default function SettingsPage() {
                   <li>
                     Generierte Ernährungspläne und Einkaufslisten
                   </li>
-                  <li>Mitarbeiter-Accounts (E-Mail, Name, Rolle)</li>
+                  <li>Mitarbeiter:innen-Accounts (E-Mail, Name, Rolle)</li>
                 </ul>
               </div>
 
@@ -684,7 +684,7 @@ export default function SettingsPage() {
                 </h4>
                 <p className="text-sm text-muted-foreground mb-3">
                   Gemäß DSGVO Art. 17 haben betroffene Personen das Recht auf
-                  Löschung ihrer Daten. Patienten werden in NutriKompass
+                  Löschung ihrer Daten. Bewohner:innen werden in NutriKompass
                   standardmäßig deaktiviert (Soft-Delete), um die
                   Dokumentationspflicht zu erfüllen.
                 </p>
@@ -708,9 +708,9 @@ export default function SettingsPage() {
       <Dialog open={inviteOpen} onOpenChange={setInviteOpen}>
         <DialogContent className="sm:rounded-xl">
           <DialogHeader>
-            <DialogTitle>Mitarbeiter einladen</DialogTitle>
+            <DialogTitle>Mitarbeiter:in einladen</DialogTitle>
             <DialogDescription>
-              Der eingeladene Mitarbeiter erhält eine E-Mail mit einem Link zur
+              Die eingeladene Person erhält eine E-Mail mit einem Link zur
               Registrierung. Die Einladung ist 7 Tage gültig.
             </DialogDescription>
           </DialogHeader>
@@ -750,10 +750,10 @@ export default function SettingsPage() {
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
                   <SelectItem value="STAFF">
-                    Mitarbeiter – kann Patienten & Pläne verwalten
+                    Mitarbeiter:in – kann Bewohner:innen & Pläne verwalten
                   </SelectItem>
                   <SelectItem value="ADMIN">
-                    Administrator – voller Zugriff inkl. Einstellungen
+                    Administrator:in – voller Zugriff inkl. Einstellungen
                   </SelectItem>
                 </SelectContent>
               </Select>
@@ -803,7 +803,7 @@ export default function SettingsPage() {
               Datenlöschung beantragen
             </DialogTitle>
             <DialogDescription>
-              Dies deaktiviert alle aktiven Patientendatensätze Ihrer
+              Dies deaktiviert alle aktiven Datensätze Ihrer
               Einrichtung (Soft-Delete). Für eine vollständige Löschung
               kontaktieren Sie bitte den Support.
             </DialogDescription>
@@ -811,7 +811,7 @@ export default function SettingsPage() {
           <div className="space-y-4">
             <div className="rounded-xl bg-destructive/10 p-3 text-sm text-destructive">
               <strong>Achtung:</strong> Diese Aktion kann nicht direkt
-              rückgängig gemacht werden. Alle aktiven Patientendaten werden
+              rückgängig gemacht werden. Alle aktiven Daten werden
               deaktiviert.
             </div>
             <div className="space-y-2">

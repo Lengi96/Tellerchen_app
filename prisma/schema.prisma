@@ -39,9 +39,10 @@ model Organization {
   subscriptionStatus   SubscriptionStatus @default(TRIALING)
   trialEndsAt          DateTime?
 
-  users       User[]
-  patients    Patient[]
-  invitations StaffInvitation[]
+  users                User[]
+  patients             Patient[]
+  invitations          StaffInvitation[]
+  autonomyAgreements   AutonomyAgreement[]
 }
 
 model User {
@@ -64,6 +65,10 @@ model User {
   resetToken             String?   @unique
   resetTokenExpiresAt    DateTime?
 
+  // Autonomie-Relationen
+  createdAgreements      AutonomyAgreement[]  @relation("AgreementCreatedBy")
+  auditLogEntries        AutonomyAuditLog[]   @relation("AuditChangedBy")
+
   @@index([organizationId])
   @@index([email])
 }
@@ -79,11 +84,16 @@ model Patient {
   targetDate     DateTime?     // Optionales Zieldatum für Gewichtsziel
   allergies      String[]
   notes          String?
+  autonomyNotes  String?       // Legacy – wird durch AutonomyAgreement ersetzt
   isActive       Boolean       @default(true)
   weightHistory  WeightEntry[]
   mealPlans      MealPlan[]
   createdAt      DateTime      @default(now())
   createdBy      String
+
+  // Autonomie-System
+  autonomyAgreement  AutonomyAgreement?
+  autonomyAuditLogs  AutonomyAuditLog[]
 
   @@index([organizationId])
 }
@@ -138,4 +148,52 @@ model StaffInvitation {
 
   @@unique([organizationId, email])
   @@index([token])
+}
+
+// Autonomie-Absprachen – Strukturierte Selbstständigkeitsvereinbarungen
+model AutonomyAgreement {
+  id                     String       @id @default(cuid())
+  patientId              String       @unique
+  patient                Patient      @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  organizationId         String
+  organization           Organization @relation(fields: [organizationId], references: [id])
+
+  // Portionier-Absprachen
+  canPortionSupervised   Boolean      @default(false) // Darf unter Aufsicht portionieren
+  canPortionIndependent  Boolean      @default(false) // Darf vollständig eigenständig portionieren
+
+  notes                  String?      // Freitext: z.B. "Gilt nur beim Abendessen"
+  validFrom              DateTime
+  validUntil             DateTime?    // null = unbefristet
+
+  createdBy              String
+  createdByUser          User         @relation("AgreementCreatedBy", fields: [createdBy], references: [id])
+  createdAt              DateTime     @default(now())
+  updatedAt              DateTime     @updatedAt
+
+  auditLogs              AutonomyAuditLog[]
+
+  @@index([patientId])
+  @@index([organizationId])
+}
+
+// Unveränderliches Audit-Log – Dokumentiert jede Änderung an Absprachen
+model AutonomyAuditLog {
+  id            String            @id @default(cuid())
+  patientId     String
+  patient       Patient           @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  agreementId   String
+  agreement     AutonomyAgreement @relation(fields: [agreementId], references: [id], onDelete: Cascade)
+
+  changedBy     String
+  changedByUser User              @relation("AuditChangedBy", fields: [changedBy], references: [id])
+  changedAt     DateTime          @default(now())
+
+  fieldChanged  String            // z.B. "canPortionSupervised" oder "CREATED"
+  oldValue      String            // Vorheriger Wert als String
+  newValue      String            // Neuer Wert als String
+  reason        String            // Begründung (Pflichtfeld, min. 10 Zeichen)
+
+  @@index([patientId])
+  @@index([agreementId])
 }

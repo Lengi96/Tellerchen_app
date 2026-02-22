@@ -21,6 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, Search, Users, Loader2, Sparkles } from "lucide-react";
 import { CreatePatientModal } from "@/components/modals/CreatePatientModal";
 import { GeneratePlanModal } from "@/components/modals/GeneratePlanModal";
+import { AutonomyBadge } from "@/components/autonomy/AutonomyBadge";
 
 export default function PatientsPage() {
   const [search, setSearch] = useState("");
@@ -46,7 +47,7 @@ export default function PatientsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-text-main">Patienten</h2>
+          <h2 className="text-2xl font-bold text-text-main">Bewohner:innen</h2>
           <p className="text-muted-foreground">
             Übersicht aller betreuten Personen
           </p>
@@ -56,7 +57,7 @@ export default function PatientsPage() {
           onClick={() => setModalOpen(true)}
         >
           <Plus className="mr-2 h-4 w-4" />
-          Neuen Patienten anlegen
+          Neue Bewohner:in anlegen
         </Button>
       </div>
 
@@ -95,11 +96,11 @@ export default function PatientsPage() {
           ) : !patients || patients.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <Users className="mx-auto h-12 w-12 mb-3 opacity-50" />
-              <p className="font-medium">Keine Patienten gefunden</p>
+              <p className="font-medium">Keine Bewohner:innen gefunden</p>
               <p className="text-sm mt-1">
                 {search
                   ? "Versuchen Sie einen anderen Suchbegriff."
-                  : "Legen Sie den ersten Patienten an."}
+                  : "Legen Sie die erste Bewohner:in an."}
               </p>
             </div>
           ) : (
@@ -110,6 +111,7 @@ export default function PatientsPage() {
                   <TableHead>Alter</TableHead>
                   <TableHead>Akt. Gewicht</TableHead>
                   <TableHead>Zielgewicht</TableHead>
+                  <TableHead>Autonomie</TableHead>
                   <TableHead>Letzter Plan</TableHead>
                   <TableHead className="text-right">Aktionen</TableHead>
                 </TableRow>
@@ -136,6 +138,9 @@ export default function PatientsPage() {
                     </TableCell>
                     <TableCell>
                       {Number(patient.targetWeight).toFixed(1)} kg
+                    </TableCell>
+                    <TableCell>
+                      <AutonomyBadge agreement={patient.autonomyAgreement} />
                     </TableCell>
                     <TableCell>
                       {patient.mealPlans[0] ? (
@@ -193,7 +198,7 @@ export default function PatientsPage() {
           setModalOpen(false);
           setInlineFeedback({
             type: "success",
-            message: "Patient wurde erfolgreich gespeichert.",
+            message: "Bewohner:in wurde erfolgreich gespeichert.",
           });
           refetch();
         }}

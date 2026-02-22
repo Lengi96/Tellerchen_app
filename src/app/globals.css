@@ -33,5 +33,11 @@
   }
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    min-height: 100%;
   }
+}
+
+/* Zoom-safe scroll behavior */
+html {
+  scroll-behavior: smooth;
 }

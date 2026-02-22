@@ -132,6 +132,30 @@ export const mealPlansRouter = router({
         }
       }
 
+      // Autonomie-Absprachen laden und als Text aufbereiten
+      const agreement = await ctx.prisma.autonomyAgreement.findUnique({
+        where: { patientId: input.patientId },
+      });
+
+      let autonomyText: string | null = null;
+      if (agreement) {
+        const parts: string[] = [];
+        if (agreement.canPortionIndependent) {
+          parts.push("Darf vollständig eigenständig portionieren");
+        } else if (agreement.canPortionSupervised) {
+          parts.push("Darf unter Aufsicht portionieren");
+        }
+        if (agreement.notes) {
+          parts.push(agreement.notes);
+        }
+        if (parts.length > 0) {
+          autonomyText = parts.join(". ");
+        }
+      }
+
+      // Fallback auf Legacy-Feld wenn kein Agreement
+      const effectiveAutonomyNotes = autonomyText || patient.autonomyNotes;
+
       // KI-Plan generieren mit Progress-Tracking
       setProgress(ctx.user.id, "Wird vorbereitet...", 0);
 
@@ -141,6 +165,7 @@ export const mealPlansRouter = router({
           currentWeight: Number(patient.currentWeight),
           targetWeight: Number(patient.targetWeight),
           allergies: patient.allergies,
+          autonomyNotes: effectiveAutonomyNotes,
         },
         notes || undefined,
         {
@@ -322,6 +347,14 @@ export const mealPlansRouter = router({
               pseudonym: true,
               organizationId: true,
               allergies: true,
+              autonomyNotes: true,
+              autonomyAgreement: {
+                select: {
+                  canPortionSupervised: true,
+                  canPortionIndependent: true,
+                  notes: true,
+                },
+              },
             },
           },
           createdByUser: {

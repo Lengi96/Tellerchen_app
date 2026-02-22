@@ -111,7 +111,7 @@ export function EditPatientModal({
 
   const updatePatient = trpc.patients.update.useMutation({
     onSuccess: () => {
-      toast.success("Patient erfolgreich aktualisiert!");
+      toast.success("Bewohner:in erfolgreich aktualisiert!");
       onSuccess();
     },
     onError: (error) => {
@@ -143,7 +143,7 @@ export function EditPatientModal({
             {patient.pseudonym} bearbeiten
           </DialogTitle>
           <DialogDescription>
-            Aktualisieren Sie die Daten des Patienten. Pseudonym und Geburtsjahr
+            Aktualisieren Sie die Daten. Pseudonym und Geburtsjahr
             können aus Datenschutzgründen nicht geändert werden.
           </DialogDescription>
         </DialogHeader>

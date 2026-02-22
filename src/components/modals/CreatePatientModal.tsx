@@ -45,7 +45,7 @@ const createPatientSchema = z
     pseudonym: z
       .string()
       .min(2, "Pseudonym muss mindestens 2 Zeichen lang sein.")
-      .max(50, "Pseudonym darf maximal 50 Zeichen lang sein."),
+      .max(30, "Pseudonym darf maximal 30 Zeichen lang sein."),
     birthYear: z.number({
       error: "Bitte ein Geburtsjahr auswählen.",
     }),
@@ -120,19 +120,19 @@ export function CreatePatientModal({
 
   const createPatient = trpc.patients.create.useMutation({
     onSuccess: () => {
-      toast.success("Patient erfolgreich angelegt!");
+      toast.success("Bewohner:in erfolgreich angelegt!");
       setInlineFeedback({
         type: "success",
-        message: "Patient wurde erfolgreich angelegt.",
+        message: "Bewohner:in wurde erfolgreich angelegt.",
       });
       reset();
       onSuccess();
     },
     onError: (error) => {
-      toast.error(error.message || "Fehler beim Anlegen des Patienten.");
+      toast.error(error.message || "Fehler beim Anlegen.");
       setInlineFeedback({
         type: "error",
-        message: error.message || "Fehler beim Anlegen des Patienten.",
+        message: error.message || "Fehler beim Anlegen.",
       });
     },
   });
@@ -150,10 +150,10 @@ export function CreatePatientModal({
       <DialogContent className="sm:max-w-lg rounded-xl">
         <DialogHeader>
           <DialogTitle className="text-text-main">
-            Neuen Patienten anlegen
+            Neue Bewohner:in anlegen
           </DialogTitle>
           <DialogDescription>
-            Bitte füllen Sie die Daten des neuen Patienten aus. Alle Daten
+            Bitte füllen Sie die Daten aus. Alle Angaben
             werden pseudonymisiert gespeichert.
           </DialogDescription>
         </DialogHeader>
@@ -162,12 +162,13 @@ export function CreatePatientModal({
           {/* Pseudonym */}
           <div className="space-y-2">
             <Label htmlFor="pseudonym">
-              Pseudonym <span className="text-destructive">*</span>
+              Pseudonym / Kürzel <span className="text-destructive">*</span>
             </Label>
             <Input
               id="pseudonym"
               className="rounded-xl"
-              placeholder="z.B. Sonnenschein, Mondlicht..."
+              placeholder='z.B. "Lisa M.", "Sonnenschein", "Raider 3"'
+              maxLength={30}
               {...register("pseudonym")}
             />
             {errors.pseudonym && (
@@ -175,6 +176,9 @@ export function CreatePatientModal({
                 {errors.pseudonym.message}
               </p>
             )}
+            <p className="text-xs text-muted-foreground">
+              Wählen Sie ein Kürzel, das intern verwendet wird. Bitte keinen vollständigen Klarnamen verwenden.
+            </p>
           </div>
 
           {/* Geburtsjahr */}
@@ -303,7 +307,7 @@ export function CreatePatientModal({
 
           {/* Notizen */}
           <div className="space-y-2">
-            <Label htmlFor="notes">Notizen für Mitarbeiter (optional)</Label>
+            <Label htmlFor="notes">Notizen für das Team (optional)</Label>
             <Textarea
               id="notes"
               className="rounded-xl"
@@ -339,7 +343,7 @@ export function CreatePatientModal({
                 Wird angelegt...
               </>
             ) : (
-              "Patient anlegen"
+              "Bewohner:in anlegen"
             )}
           </Button>
         </form>

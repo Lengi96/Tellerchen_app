@@ -295,11 +295,11 @@ export default function ShoppingListsPage() {
                     <span className="font-semibold text-text-main">{weekLabel}</span>
                     {" – "}
                     <span className="font-semibold text-text-main">
-                      {filteredLists.length} Patient{filteredLists.length !== 1 ? "en" : ""}
+                      {filteredLists.length} Bewohner:in{filteredLists.length !== 1 ? "nen" : ""}
                     </span>
                   </p>
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    Mengen aller Patienten dieser Woche wurden zusammengeführt.
+                    Mengen aller Bewohner:innen dieser Woche wurden zusammengeführt.
                   </p>
                 </div>
 
@@ -339,7 +339,7 @@ export default function ShoppingListsPage() {
                 <Card className="rounded-xl shadow-sm">
                   <CardContent className="pt-6 text-center">
                     <div className="text-3xl font-bold text-text-main">{filteredLists.length}</div>
-                    <p className="text-sm text-muted-foreground">Patienten</p>
+                    <p className="text-sm text-muted-foreground">Bewohner:innen</p>
                   </CardContent>
                 </Card>
               </div>
@@ -401,7 +401,7 @@ export default function ShoppingListsPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Patient</TableHead>
+                    <TableHead>Bewohner:in</TableHead>
                     <TableHead>Kalenderwoche</TableHead>
                     <TableHead>Erstellt von</TableHead>
                     <TableHead>Erstellt am</TableHead>

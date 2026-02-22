@@ -31,6 +31,7 @@ import {
   TrendingUp,
   Pencil,
   CalendarDays,
+  Handshake,
 } from "lucide-react";
 import {
   LineChart,
@@ -44,6 +45,7 @@ import {
 } from "recharts";
 import { GeneratePlanModal } from "@/components/modals/GeneratePlanModal";
 import { EditPatientModal } from "@/components/modals/EditPatientModal";
+import { AutonomyTab } from "@/components/autonomy/AutonomyTab";
 
 export default function PatientDetailPage() {
   const params = useParams();
@@ -76,7 +78,7 @@ export default function PatientDetailPage() {
   if (error) {
     return (
       <div className="text-center py-20 text-muted-foreground">
-        <p className="font-medium text-text-main">Patientendetails konnten nicht geladen werden.</p>
+        <p className="font-medium text-text-main">Daten konnten nicht geladen werden.</p>
         <p className="mt-1 text-sm">{error.message}</p>
         <Link href="/patients">
           <Button variant="link" className="mt-2">
@@ -90,7 +92,7 @@ export default function PatientDetailPage() {
   if (!patient) {
     return (
       <div className="text-center py-20 text-muted-foreground">
-        <p>Patient nicht gefunden.</p>
+        <p>Bewohner:in nicht gefunden.</p>
         <Link href="/patients">
           <Button variant="link" className="mt-2">
             Zurück zur Übersicht
@@ -159,6 +161,19 @@ export default function PatientDetailPage() {
                 <Pencil className="mr-2 h-4 w-4" />
                 Bearbeiten
               </Button>
+              {patient.mealPlans[0] ? (
+                <Link href={`/meal-plans/${patient.mealPlans[0].id}`}>
+                  <Button variant="outline" className="rounded-xl">
+                    <ClipboardList className="mr-2 h-4 w-4" />
+                    Letzter Plan →
+                  </Button>
+                </Link>
+              ) : (
+                <Button variant="outline" className="rounded-xl" disabled>
+                  <ClipboardList className="mr-2 h-4 w-4" />
+                  Noch kein Plan
+                </Button>
+              )}
               <Button
                 className="rounded-xl bg-primary hover:bg-primary-600"
                 onClick={() => setGenerateModalOpen(true)}
@@ -198,6 +213,10 @@ export default function PatientDetailPage() {
           </TabsTrigger>
           <TabsTrigger value="history" className="rounded-xl">
             Verlauf
+          </TabsTrigger>
+          <TabsTrigger value="autonomy" className="rounded-xl">
+            <Handshake className="mr-1 h-4 w-4" />
+            Absprachen
           </TabsTrigger>
         </TabsList>
 
@@ -280,6 +299,7 @@ export default function PatientDetailPage() {
               </CardContent>
             </Card>
           </div>
+
         </TabsContent>
 
         {/* Ernährungspläne */}
@@ -362,6 +382,11 @@ export default function PatientDetailPage() {
               )}
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Absprachen */}
+        <TabsContent value="autonomy">
+          <AutonomyTab patientId={patientId} />
         </TabsContent>
 
         {/* Verlauf */}

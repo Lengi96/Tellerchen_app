@@ -139,7 +139,7 @@ export default function ProfilePage() {
                     : "rounded-xl bg-accent text-text-main"
                 }
               >
-                {user.role === "ADMIN" ? "Administrator" : "Mitarbeiter"}
+                {user.role === "ADMIN" ? "Administrator:in" : "Mitarbeiter:in"}
               </Badge>
             </div>
           </div>
@@ -163,11 +163,11 @@ export default function ProfilePage() {
               <div>
                 <p className="text-xs text-muted-foreground">Rolle</p>
                 <p className="text-sm font-medium text-text-main">
-                  {user.role === "ADMIN" ? "Administrator" : "Mitarbeiter"}
+                  {user.role === "ADMIN" ? "Administrator:in" : "Mitarbeiter:in"}
                   {user.role === "ADMIN" &&
                     " – Voller Zugriff inkl. Einstellungen"}
                   {user.role === "STAFF" &&
-                    " – Patienten & Pläne verwalten"}
+                    " – Bewohner:innen & Pläne verwalten"}
                 </p>
               </div>
             </div>
@@ -285,7 +285,7 @@ export default function ProfilePage() {
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">
-                        Aktive Patienten
+                        Aktive Bewohner:innen
                       </span>
                       <span className="font-medium text-text-main">
                         {usage.patients.current} / {usage.patients.max}

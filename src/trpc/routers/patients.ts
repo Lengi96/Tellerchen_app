@@ -28,6 +28,7 @@ export const patientsRouter = router({
         targetDate: z.coerce.date().optional().nullable(),
         allergies: z.array(z.string()),
         notes: z.string().optional(),
+        autonomyNotes: z.string().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -96,6 +97,12 @@ export const patientsRouter = router({
             orderBy: { createdAt: "desc" },
             take: 1,
           },
+          autonomyAgreement: {
+            select: {
+              canPortionSupervised: true,
+              canPortionIndependent: true,
+            },
+          },
         },
         orderBy: { createdAt: "desc" },
       });
@@ -153,6 +160,7 @@ export const patientsRouter = router({
         targetDate: z.coerce.date().optional().nullable(),
         allergies: z.array(z.string()).optional(),
         notes: z.string().optional(),
+        autonomyNotes: z.string().optional().nullable(),
       })
     )
     .mutation(async ({ ctx, input }) => {

@@ -50,6 +50,7 @@ interface PatientForPrompt {
   currentWeight: number;
   targetWeight: number;
   allergies: string[];
+  autonomyNotes?: string | null;
 }
 
 const DAY_NAMES = [
@@ -68,11 +69,13 @@ function buildPatientBasePrompt(patient: PatientForPrompt, additionalNotes?: str
   const allergiesText =
     patient.allergies.length > 0 ? patient.allergies.join(", ") : "Keine bekannt";
   const notesText = additionalNotes || "Keine besonderen Hinweise";
+  const autonomyText = patient.autonomyNotes || "Keine Absprachen";
 
   return {
     age,
     allergiesText,
     notesText,
+    autonomyText,
   };
 }
 
@@ -84,7 +87,7 @@ function buildDayPrompts(
   excludedMealNames: string[] = [],
   correctionHint?: string
 ) {
-  const { age, allergiesText, notesText } = buildPatientBasePrompt(
+  const { age, allergiesText, notesText, autonomyText } = buildPatientBasePrompt(
     patient,
     additionalNotes
   );
@@ -139,6 +142,7 @@ Regeln:
 - Zielgewicht: ${patient.targetWeight} kg
 - Allergien/Unverträglichkeiten: ${allergiesText}
 - Besondere Hinweise: ${notesText}
+- Selbstständigkeit/Absprachen: ${autonomyText}
 
 Erstelle den Plan für ${dayName}.
 ${excludedMealNames.length > 0 ? `WICHTIG: Verwende KEINE der folgenden bereits genutzten Gerichte: ${excludedMealNames.join(", ")}.` : ""}
@@ -434,13 +438,13 @@ export async function generateMealPlan(
     throw new Error("Der zusammengesetzte Wochenplan ist ungültig.");
   }
 
-  const { age, allergiesText, notesText } = buildPatientBasePrompt(
+  const { age, allergiesText, notesText, autonomyText } = buildPatientBasePrompt(
     patient,
     additionalNotes
   );
 
   return {
     plan: result.data,
-    prompt: `Tagweise Generierung | Alter: ${age} | Allergien: ${allergiesText} | Hinweise: ${notesText}`,
+    prompt: `Tagweise Generierung | Alter: ${age} | Allergien: ${allergiesText} | Hinweise: ${notesText} | Absprachen: ${autonomyText}`,
   };
 }

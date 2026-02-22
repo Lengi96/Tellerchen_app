@@ -1,17 +1,34 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { trpc } from "@/trpc/client";
 import { AlertTriangle, Sparkles, X } from "lucide-react";
-import { useState } from "react";
+
+const STORAGE_KEY = "trialBannerDismissed";
 
 export function TrialBanner() {
   const [dismissed, setDismissed] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { data: subscription, isLoading } =
     trpc.billing.getSubscription.useQuery();
 
-  // Nicht anzeigen wenn: laden, dismissed, oder kein Trial
-  if (isLoading || dismissed) return null;
+  // localStorage-Persistenz: Beim Mount prüfen
+  useEffect(() => {
+    setMounted(true);
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored === "true") {
+      setDismissed(true);
+    }
+  }, []);
+
+  const handleDismiss = () => {
+    setDismissed(true);
+    localStorage.setItem(STORAGE_KEY, "true");
+  };
+
+  // Nicht anzeigen wenn: laden, nicht gemountet, dismissed, oder kein Trial
+  if (!mounted || isLoading || dismissed) return null;
   if (!subscription) return null;
   if (subscription.subscriptionPlan !== "TRIAL") return null;
 
@@ -48,14 +65,14 @@ export function TrialBanner() {
               Noch {trialDaysLeft} {trialDaysLeft === 1 ? "Tag" : "Tage"} in der
               Testphase.{" "}
               <Link href="/billing" className="underline font-semibold hover:no-underline">
-                Plan waehlen
+                Plan wählen
               </Link>
             </p>
           </div>
           <button
-            onClick={() => setDismissed(true)}
+            onClick={handleDismiss}
             className="text-yellow-600 hover:text-yellow-800 p-1 rounded-lg hover:bg-yellow-100 transition-colors"
-            aria-label="Banner schliessen"
+            aria-label="Banner schließen"
           >
             <X className="h-4 w-4" />
           </button>
