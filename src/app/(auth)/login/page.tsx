@@ -34,9 +34,10 @@ export default function LoginPage() {
 
   async function onSubmit(data: LoginFormData) {
     setError(null);
+    const email = data.email.trim().toLowerCase();
 
     const result = await signIn("credentials", {
-      email: data.email,
+      email,
       password: data.password,
       redirect: false,
     });
@@ -47,13 +48,13 @@ export default function LoginPage() {
       try {
         const res = await fetch(
           `/api/trpc/auth.checkVerificationStatus?input=${encodeURIComponent(
-            JSON.stringify({ json: { email: data.email } })
+            JSON.stringify({ json: { email } })
           )}`
         );
         const json = await res.json();
         if (json?.result?.data?.json?.needsVerification) {
           router.push(
-            `/verify-email?email=${encodeURIComponent(data.email)}`
+            `/verify-email?email=${encodeURIComponent(email)}`
           );
           return;
         }

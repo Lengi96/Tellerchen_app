@@ -18,12 +18,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           throw new Error("Bitte E-Mail und Passwort eingeben.");
         }
 
-        const email = credentials.email as string;
+        const email = (credentials.email as string).trim().toLowerCase();
         const password = credentials.password as string;
 
         // Sicherheitshinweis: User wird anhand der E-Mail gesucht, Passwort wird mit bcrypt verglichen
-        const user = await prisma.user.findUnique({
-          where: { email },
+        const user = await prisma.user.findFirst({
+          where: {
+            email: {
+              equals: email,
+              mode: "insensitive",
+            },
+          },
         });
 
         if (!user) {

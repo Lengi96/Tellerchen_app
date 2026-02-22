@@ -32,8 +32,14 @@ export const authRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       // Prüfen ob die E-Mail bereits existiert
-      const existingUser = await ctx.prisma.user.findUnique({
-        where: { email: input.email },
+      const email = input.email.trim().toLowerCase();
+      const existingUser = await ctx.prisma.user.findFirst({
+        where: {
+          email: {
+            equals: email,
+            mode: "insensitive",
+          },
+        },
       });
 
       if (existingUser) {
@@ -63,7 +69,7 @@ export const authRouter = router({
         const user = await tx.user.create({
           data: {
             organizationId: organization.id,
-            email: input.email,
+            email,
             name: input.name,
             passwordHash,
             role: "ADMIN",
@@ -135,8 +141,14 @@ export const authRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const user = await ctx.prisma.user.findUnique({
-        where: { email: input.email },
+      const email = input.email.trim().toLowerCase();
+      const user = await ctx.prisma.user.findFirst({
+        where: {
+          email: {
+            equals: email,
+            mode: "insensitive",
+          },
+        },
       });
 
       // Immer Erfolg zurückgeben (Anti-Enumeration)
@@ -179,8 +191,14 @@ export const authRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const user = await ctx.prisma.user.findUnique({
-        where: { email: input.email },
+      const email = input.email.trim().toLowerCase();
+      const user = await ctx.prisma.user.findFirst({
+        where: {
+          email: {
+            equals: email,
+            mode: "insensitive",
+          },
+        },
       });
 
       // Immer Erfolg zurückgeben (Anti-Enumeration)
@@ -270,8 +288,14 @@ export const authRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
-      const user = await ctx.prisma.user.findUnique({
-        where: { email: input.email },
+      const email = input.email.trim().toLowerCase();
+      const user = await ctx.prisma.user.findFirst({
+        where: {
+          email: {
+            equals: email,
+            mode: "insensitive",
+          },
+        },
         select: { emailVerified: true },
       });
       // Nur true zurückgeben wenn User existiert UND nicht verifiziert ist
