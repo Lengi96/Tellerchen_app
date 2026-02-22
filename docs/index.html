@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NutriKompass</title>
+    <style>
+      :root {
+        --bg: #f4f7f5;
+        --surface: #ffffff;
+        --text: #152119;
+        --muted: #4a5a4f;
+        --accent: #0f7a48;
+        --accent-2: #0b5b36;
+        --border: #d8e3db;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 20% 10%, #d8f3e3 0%, transparent 35%),
+          radial-gradient(circle at 80% 90%, #cdebe7 0%, transparent 35%),
+          var(--bg);
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+      .card {
+        width: min(760px, 100%);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 28px;
+        box-shadow: 0 14px 44px rgba(17, 43, 27, 0.12);
+      }
+      h1 {
+        margin: 0 0 12px;
+        font-size: clamp(2rem, 4vw, 2.8rem);
+        line-height: 1.1;
+      }
+      p {
+        margin: 0 0 16px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 20px 0 8px;
+      }
+      a.button {
+        display: inline-block;
+        text-decoration: none;
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-weight: 600;
+      }
+      .primary {
+        background: var(--accent);
+        color: #fff;
+      }
+      .primary:hover {
+        background: var(--accent-2);
+      }
+      .secondary {
+        background: #fff;
+        color: var(--accent-2);
+        border: 1px solid var(--border);
+      }
+      .foot {
+        margin-top: 10px;
+        font-size: 0.92rem;
+        color: var(--muted);
+      }
+      code {
+        background: #eef4ef;
+        border-radius: 6px;
+        padding: 2px 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <h1>NutriKompass</h1>
+      <p>
+        KI-gestützte Ernährungsplanung für Einrichtungen mit Fokus auf Jugendliche
+        mit Essstörungen.
+      </p>
+      <p>
+        Diese GitHub-Pages-Seite ist die öffentliche Projektseite. Die eigentliche
+        Anwendung läuft als Next.js Fullstack-App und benötigt ein Server-Deployment
+        (z. B. Vercel) sowie Datenbank- und API-Secrets.
+      </p>
+      <div class="actions">
+        <a class="button primary" href="https://github.com/Lengi96/Tellerchen_app"
+          >Zum Repository</a
+        >
+        <a class="button secondary" href="https://github.com/Lengi96/Tellerchen_app#readme"
+          >README lesen</a
+        >
+      </div>
+      <p class="foot">
+        Veröffentlichungsquelle: <code>main/docs</code> über GitHub Pages.
+      </p>
+    </main>
+  </body>
+  </html>
