@@ -42,8 +42,7 @@ export type IngredientData = z.infer<typeof ingredientSchema>;
 
 type DayPlanData = z.infer<typeof daySchema>;
 
-const DAY_REQUEST_TIMEOUT_MS = 25_000;
-const DAY_FALLBACK_TIMEOUT_MS = 45_000;
+const DAY_REQUEST_TIMEOUT_MS = 6_500;
 
 interface PatientForPrompt {
   birthYear: number;
@@ -62,6 +61,33 @@ const DAY_NAMES = [
   "Samstag",
   "Sonntag",
 ] as const;
+
+const BASE_MEAL_LIBRARY = {
+  Frühstück: [
+    "Overnight-Oats mit Banane",
+    "Vollkornbrot mit Frischkäse und Gurke",
+    "Joghurt-Bowl mit Haferflocken",
+    "Rührei mit Vollkorntoast",
+  ],
+  Mittagessen: [
+    "Linsencurry mit Reis",
+    "Pasta mit Tomatensauce und Gemüse",
+    "Kartoffelpfanne mit Kräuterquark",
+    "Reis-Bowl mit Kichererbsen",
+  ],
+  Abendessen: [
+    "Gemüseomelett mit Ofenkartoffeln",
+    "Wraps mit Bohnen und Salat",
+    "Couscous-Salat mit Feta",
+    "Vollkornbrotzeit mit Rohkost",
+  ],
+  Snack: [
+    "Apfel mit Nussmus",
+    "Quark mit Beeren",
+    "Haferkekse und Banane",
+    "Joghurt mit Nüssen",
+  ],
+} as const;
 
 function getDayNameByIndex(index: number): string {
   const weekday = DAY_NAMES[index % DAY_NAMES.length];
@@ -164,6 +190,61 @@ function findVarietyIssues(days: DayPlanData[]): number[] {
   return Array.from(badDays.values()).sort((a, b) => a - b);
 }
 
+function buildFallbackRecipe(mealName: string): string {
+  return `Zutaten abmessen und bereitstellen; Gemüse bzw. Beilage gründlich vorbereiten; Hauptzutaten in einer Pfanne oder einem Topf bei mittlerer Hitze anrösten; Flüssigkeit oder Sauce zugeben und alles 8-12 Minuten sanft garen; Mit Kräutern, Salz und Pfeffer abschmecken; Portionsweise anrichten und warm servieren. (${mealName})`;
+}
+
+function createFallbackMeal(
+  mealType: "Frühstück" | "Mittagessen" | "Abendessen" | "Snack",
+  dayIndex: number
+) {
+  const pool = BASE_MEAL_LIBRARY[mealType];
+  const mealName = pool[dayIndex % pool.length];
+  const kcalMap = {
+    Frühstück: 430,
+    Mittagessen: 620,
+    Abendessen: 560,
+    Snack: 260,
+  } as const;
+  const kcal = kcalMap[mealType];
+
+  return {
+    mealType,
+    name: mealName,
+    description: "Ausgewogene, alltagstaugliche Mahlzeit mit klarer Zubereitung.",
+    recipe: buildFallbackRecipe(mealName),
+    kcal,
+    protein: Math.round(kcal * 0.2 / 4),
+    carbs: Math.round(kcal * 0.5 / 4),
+    fat: Math.round(kcal * 0.3 / 9),
+    ingredients: [
+      { name: "Hauptzutat", amount: 180, unit: "g" as const, category: "Kohlenhydrate" as const },
+      { name: "Gemüse", amount: 150, unit: "g" as const, category: "Gemüse & Obst" as const },
+      { name: "Proteinquelle", amount: 120, unit: "g" as const, category: "Protein" as const },
+      { name: "Öl", amount: 1, unit: "EL" as const, category: "Sonstiges" as const },
+    ],
+  };
+}
+
+function buildFallbackPlan(dayNames: string[]): MealPlanData {
+  const days = dayNames.map((dayName, dayIndex) => {
+    const meals = [
+      createFallbackMeal("Frühstück", dayIndex),
+      createFallbackMeal("Mittagessen", dayIndex),
+      createFallbackMeal("Abendessen", dayIndex),
+      createFallbackMeal("Snack", dayIndex),
+    ];
+    const dailyKcal = meals.reduce((sum, meal) => sum + meal.kcal, 0);
+    return { dayName, meals, dailyKcal };
+  });
+
+  const parsed = mealPlanSchema.safeParse({ days });
+  if (!parsed.success) {
+    throw new Error("Fallback-Plan konnte nicht erstellt werden.");
+  }
+  return parsed.data;
+}
+
 export async function generateMealPlan(
   patient: PatientForPrompt,
   additionalNotes?: string,
@@ -241,47 +322,42 @@ Erstelle den vollständigen ${numDays}-Tage-Plan in genau einem JSON-Objekt im g
   let parsedPlan: MealPlanData | null = null;
   const maxTokens = Math.min(3800, 700 + numDays * 400);
 
-  for (let attempt = 0; attempt < 2; attempt++) {
-    const timeoutMs = attempt === 0 ? requestTimeoutMs : DAY_FALLBACK_TIMEOUT_MS;
-    try {
-      const response = await withTimeout(
-        getOpenAIClient().chat.completions.create({
-          model: "gpt-4o-mini",
-          response_format: { type: "json_object" },
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: userPrompt },
-          ],
-          temperature: 0.2,
-          max_tokens: maxTokens,
-        }),
-        timeoutMs,
-        "TIMEOUT_PLAN"
-      );
+  try {
+    const response = await withTimeout(
+      getOpenAIClient().chat.completions.create({
+        model: "gpt-4o-mini",
+        response_format: { type: "json_object" },
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt },
+        ],
+        temperature: 0.2,
+        max_tokens: maxTokens,
+      }),
+      requestTimeoutMs,
+      "TIMEOUT_PLAN"
+    );
 
-      const content = response.choices[0]?.message?.content;
-      if (!content) continue;
-
+    const content = response.choices[0]?.message?.content;
+    if (content) {
       const parsed = tryParseModelJson(content);
       const result = mealPlanSchema.safeParse(parsed);
-      if (!result.success) continue;
-      if (result.data.days.length < numDays) continue;
-
-      const normalizedDays = result.data.days.slice(0, numDays).map((day, idx) => ({
-        ...day,
-        dayName: dayNames[idx],
-        dailyKcal: getEffectiveDailyKcal(day),
-      }));
-
-      parsedPlan = { days: normalizedDays };
-      break;
-    } catch {
-      // retry
+      if (result.success && result.data.days.length >= numDays) {
+        const normalizedDays = result.data.days.slice(0, numDays).map((day, idx) => ({
+          ...day,
+          dayName: dayNames[idx],
+          dailyKcal: getEffectiveDailyKcal(day),
+        }));
+        parsedPlan = { days: normalizedDays };
+      }
     }
+  } catch {
+    // fallback below
   }
 
   if (!parsedPlan) {
-    throw new Error("Plan konnte nicht stabil als JSON erzeugt werden.");
+    onProgress?.("KI langsam, verwende schnellen Fallback-Plan...");
+    parsedPlan = buildFallbackPlan(dayNames);
   }
 
   findVarietyIssues(parsedPlan.days);

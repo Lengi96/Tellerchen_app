@@ -5,7 +5,6 @@ export default function ImpressumPage() {
   return (
     <div className="min-h-screen bg-[#F8F9FA] text-[#1A1A2E]">
       <div className="max-w-3xl mx-auto py-12 px-4 sm:px-6">
-        {/* Back link */}
         <Link
           href="/"
           className="inline-flex items-center gap-1.5 text-sm text-[#2D6A4F] hover:underline mb-8"
@@ -16,63 +15,57 @@ export default function ImpressumPage() {
 
         <h1 className="text-3xl sm:text-4xl font-bold mb-10">Impressum</h1>
 
-        {/* ── Angaben gem. &sect; 5 TMG ───────────────────────── */}
         <section className="mb-8">
           <h2 className="text-xl font-semibold mb-3">
             Angaben gem&auml;&szlig; &sect; 5 TMG
           </h2>
           <p className="text-gray-700 leading-relaxed">
-            [Vor- und Nachname / Firmenname]
+            Christoph Lengowski
             <br />
-            [Stra&szlig;e und Hausnummer]
+            Adreystra&szlig;e 116
             <br />
-            [PLZ Ort]
+            44225 Dortmund
             <br />
             Deutschland
           </p>
           <p className="text-gray-700 leading-relaxed mt-2">
             <strong>Vertreten durch:</strong>
             <br />
-            [Gesch&auml;ftsf&uuml;hrer/in oder Inhaber/in]
+            Christoph Lengowski
           </p>
           <p className="text-gray-700 leading-relaxed mt-2">
-            <strong>Handelsregister:</strong> [HRB XXXXX]
+            <strong>Handelsregister:</strong> Keine Eintragung
             <br />
-            <strong>Registergericht:</strong> [Amtsgericht Musterstadt]
+            <strong>Registergericht:</strong> Entf&auml;llt
             <br />
-            <strong>Umsatzsteuer-ID:</strong> [DE XXXXXXXXX]
+            <strong>Umsatzsteuer:</strong> Gem&auml;&szlig; &sect; 19 UStG wird keine Umsatzsteuer ausgewiesen.
           </p>
         </section>
 
-        {/* ── Kontakt ─────────────────────────────────────────── */}
         <section className="mb-8">
           <h2 className="text-xl font-semibold mb-3">Kontakt</h2>
           <p className="text-gray-700 leading-relaxed">
-            <strong>E-Mail:</strong> info@nutrikompass.de
+            <strong>E-Mail:</strong> c.lengowski@yahoo.de
             <br />
-            <strong>Telefon:</strong> [+49 XXX XXXXXXX]
+            <strong>Telefon:</strong> 015111851677
           </p>
         </section>
 
-        {/* ── Verantwortlich f&uuml;r den Inhalt ──────────────── */}
         <section className="mb-8">
           <h2 className="text-xl font-semibold mb-3">
-            Verantwortlich f&uuml;r den Inhalt nach &sect; 55 Abs. 2 RStV
+            Verantwortlich f&uuml;r den Inhalt nach &sect; 55 Abs. 2 MStV
           </h2>
           <p className="text-gray-700 leading-relaxed">
-            [Vor- und Nachname]
+            Christoph Lengowski
             <br />
-            [Stra&szlig;e und Hausnummer]
+            Adreystra&szlig;e 116
             <br />
-            [PLZ Ort]
+            44225 Dortmund
           </p>
         </section>
 
-        {/* ── EU-Streitschlichtung ────────────────────────────── */}
         <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-3">
-            EU-Streitschlichtung
-          </h2>
+          <h2 className="text-xl font-semibold mb-3">EU-Streitschlichtung</h2>
           <p className="text-gray-700 leading-relaxed">
             Die Europ&auml;ische Kommission stellt eine Plattform zur
             Online-Streitbeilegung (OS) bereit:{" "}
@@ -92,13 +85,6 @@ export default function ImpressumPage() {
           </p>
         </section>
 
-        {/* ── Hinweis ─────────────────────────────────────────── */}
-        <div className="mt-12 rounded-xl bg-[#74C69D]/10 border border-[#74C69D]/30 p-4 text-sm text-gray-700">
-          <strong>Hinweis:</strong> Bitte ersetzen Sie die Platzhalter durch
-          Ihre tats&auml;chlichen Angaben.
-        </div>
-
-        {/* ── Footer-Links ────────────────────────────────────── */}
         <div className="mt-12 pt-8 border-t border-gray-200 flex flex-wrap gap-6 text-sm text-gray-600">
           <Link href="/datenschutz" className="hover:text-[#2D6A4F] transition-colors">
             Datenschutzerkl&auml;rung
