@@ -207,7 +207,7 @@ export const mealPlansRouter = router({
         },
       });
 
-      return mealPlan;
+      return { id: mealPlan.id };
     }),
 
   // Alle Pläne eines Patienten
