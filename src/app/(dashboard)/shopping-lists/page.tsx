@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
@@ -9,7 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Loader2, ShoppingCart, CalendarDays, List, ChevronLeft, ChevronRight } from "lucide-react";
+import { Loader2, ShoppingCart, CalendarDays, List, ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+import type { MealPlanData } from "@/lib/openai/nutritionPrompt";
 
 interface ShoppingItem {
   name: string;
@@ -50,11 +52,13 @@ function toIso(date: Date): string {
 }
 
 /** Alle itemsJson mehrerer Listen zusammenführen (Mengen addieren) */
-function aggregateLists(lists: { itemsJson: unknown }[]): Record<string, ShoppingItem[]> {
+function aggregateLists(
+  lists: { itemsJson: unknown; mealPlan?: { planJson?: unknown } }[]
+): Record<string, ShoppingItem[]> {
   const ingredientMap = new Map<string, ShoppingItem>();
 
   for (const list of lists) {
-    const grouped = list.itemsJson as Record<string, ShoppingItem[]>;
+    const grouped = getNormalizedItems(list.itemsJson, list.mealPlan?.planJson);
     for (const categoryItems of Object.values(grouped)) {
       for (const item of categoryItems) {
         const key = `${item.name.toLowerCase()}_${item.unit}`;
@@ -88,6 +92,77 @@ function aggregateLists(lists: { itemsJson: unknown }[]): Record<string, Shoppin
   return grouped;
 }
 
+
+function isTooCoarseGroupedItems(grouped: Record<string, ShoppingItem[]>): boolean {
+  const categories = Object.keys(grouped);
+  const totalItems = Object.values(grouped).reduce((sum, arr) => sum + arr.length, 0);
+  if (totalItems === 0) return false;
+  if (totalItems > categories.length + 1) return false;
+
+  return Object.entries(grouped).every(([category, arr]) => {
+    if (arr.length === 0) return true;
+    if (arr.length > 1) return false;
+    const name = arr[0]?.name?.toLowerCase?.().trim?.() ?? "";
+    const categoryName = category.toLowerCase().trim();
+    return name === categoryName || name.includes(categoryName);
+  });
+}
+
+function rebuildGroupedItemsFromPlan(planJson?: unknown): Record<string, ShoppingItem[]> | null {
+  if (!planJson) return null;
+  const plan = planJson as MealPlanData;
+  if (!plan?.days?.length) return null;
+
+  const ingredientMap = new Map<string, ShoppingItem>();
+  for (const day of plan.days) {
+    for (const meal of day.meals) {
+      for (const ingredient of meal.ingredients) {
+        const key = `${ingredient.name.toLowerCase()}_${ingredient.unit}`;
+        const existing = ingredientMap.get(key);
+        if (existing) {
+          existing.amount += ingredient.amount;
+        } else {
+          ingredientMap.set(key, {
+            name: ingredient.name,
+            amount: ingredient.amount,
+            unit: ingredient.unit,
+            category: ingredient.category,
+          });
+        }
+      }
+    }
+  }
+
+  const grouped: Record<string, ShoppingItem[]> = {
+    "Gemüse & Obst": [],
+    Protein: [],
+    Milchprodukte: [],
+    Kohlenhydrate: [],
+    Sonstiges: [],
+  };
+
+  for (const item of Array.from(ingredientMap.values())) {
+    const cat = grouped[item.category] ? item.category : "Sonstiges";
+    grouped[cat].push({ ...item, amount: Math.round(item.amount) });
+  }
+
+  for (const cat of Object.keys(grouped)) {
+    grouped[cat].sort((a, b) => a.name.localeCompare(b.name, "de"));
+  }
+
+  return grouped;
+}
+
+function getNormalizedItems(
+  itemsJson: unknown,
+  planJson?: unknown
+): Record<string, ShoppingItem[]> {
+  const grouped = itemsJson as Record<string, ShoppingItem[]>;
+  if (!isTooCoarseGroupedItems(grouped)) {
+    return grouped;
+  }
+  return rebuildGroupedItemsFromPlan(planJson) ?? grouped;
+}
 type ViewMode = "week" | "all";
 
 export default function ShoppingListsPage() {
@@ -105,6 +180,15 @@ export default function ShoppingListsPage() {
     error,
     refetch,
   } = trpc.shoppingList.list.useQuery({ limit: 200 }, { retry: 1 });
+  const deleteShoppingList = trpc.shoppingList.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Einkaufsliste wurde gelöscht.");
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Einkaufsliste konnte nicht gelöscht werden.");
+    },
+  });
 
   // Woche vor/zurück navigieren
   function shiftWeek(delta: number) {
@@ -424,11 +508,28 @@ export default function ShoppingListsPage() {
                       <TableCell>{list.mealPlan.createdByUser.name}</TableCell>
                       <TableCell>{new Date(list.createdAt).toLocaleDateString("de-DE")}</TableCell>
                       <TableCell>
-                        <Link href={`/shopping-lists/${list.id}`}>
-                          <Button variant="outline" size="sm" className="rounded-xl">
-                            Öffnen
+                        <div className="flex items-center gap-2">
+                          <Link href={`/shopping-lists/${list.id}`}>
+                            <Button variant="outline" size="sm" className="rounded-xl">
+                              Öffnen
+                            </Button>
+                          </Link>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="rounded-xl text-destructive hover:text-destructive"
+                            disabled={deleteShoppingList.isPending}
+                            onClick={() => {
+                              const ok = window.confirm(
+                                "Einkaufsliste wirklich löschen? Dieser Vorgang kann nicht rückgängig gemacht werden."
+                              );
+                              if (!ok) return;
+                              deleteShoppingList.mutate({ id: list.id });
+                            }}
+                          >
+                            <Trash2 className="h-4 w-4" />
                           </Button>
-                        </Link>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -441,3 +542,4 @@ export default function ShoppingListsPage() {
     </div>
   );
 }
+

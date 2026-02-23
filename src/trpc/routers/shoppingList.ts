@@ -1,4 +1,4 @@
-import { z } from "zod";
+﻿import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { router, protectedProcedure } from "../init";
 import type { MealPlanData } from "@/lib/openai/nutritionPrompt";
@@ -173,6 +173,7 @@ export const shoppingListRouter = router({
           mealPlan: {
             select: {
               id: true,
+              planJson: true,
               weekStart: true,
               patient: {
                 select: {
@@ -225,4 +226,43 @@ export const shoppingListRouter = router({
 
       return shoppingList;
     }),
+
+  // Einkaufsliste löschen
+  delete: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const shoppingList = await ctx.prisma.shoppingList.findUnique({
+        where: { id: input.id },
+        include: {
+          mealPlan: {
+            include: {
+              patient: {
+                select: { organizationId: true },
+              },
+            },
+          },
+        },
+      });
+
+      if (!shoppingList) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Einkaufsliste nicht gefunden.",
+        });
+      }
+
+      if (shoppingList.mealPlan.patient.organizationId !== ctx.organizationId) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Zugriff verweigert.",
+        });
+      }
+
+      await ctx.prisma.shoppingList.delete({
+        where: { id: input.id },
+      });
+
+      return { success: true };
+    }),
 });
+

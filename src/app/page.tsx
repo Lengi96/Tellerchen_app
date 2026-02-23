@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { LandingShowcase } from "@/components/landing/LandingShowcase";
 import {
   Compass,
@@ -20,12 +20,12 @@ export default function LandingPage() {
     {
       question: "Ersetzt NutriKompass medizinische Entscheidungen?",
       answer:
-        "Nein. NutriKompass unterstuetzt die Planung. Die fachliche Verantwortung bleibt bei Ihrem Team.",
+        "Nein. NutriKompass unterstützt die Planung. Die fachliche Verantwortung bleibt bei Ihrem Team.",
     },
     {
       question: "Verarbeitet NutriKompass Gesundheitsdaten?",
       answer:
-        "Je nach Nutzung koennen Gesundheitsdaten verarbeitet werden. Dafuer gelten erhoehte Schutzanforderungen.",
+        "Je nach Nutzung können Gesundheitsdaten verarbeitet werden. Dafür gelten erhöhte Schutzanforderungen.",
     },
     {
       question: "Wo werden Daten gespeichert?",
@@ -35,17 +35,17 @@ export default function LandingPage() {
     {
       question: "Wie funktioniert die Testphase?",
       answer:
-        "Sie koennen 14 Tage unverbindlich testen. In der Testphase sind aktuell bis zu 3 aktive Patientinnen und Patienten sowie 10 Plaene pro Monat enthalten.",
+        "Sie können 14 Tage unverbindlich testen. In der Testphase sind aktuell bis zu 3 aktive Patientinnen und Patienten sowie 10 Pläne pro Monat enthalten.",
     },
     {
-      question: "Wie kuendige ich einen bezahlten Plan?",
+      question: "Wie kündige ich einen bezahlten Plan?",
       answer:
-        "Die Kuendigung ist zum Ende des Abrechnungszeitraums moeglich. Bedingungen stehen vor dem Abschluss klar in der Bestellstrecke.",
+        "Die Kündigung ist zum Ende des Abrechnungszeitraums möglich. Bedingungen stehen vor dem Abschluss klar in der Bestellstrecke.",
     },
     {
       question: "Gibt es einen AV-Vertrag?",
       answer:
-        "Ja. Informationen zur Auftragsverarbeitung erhalten Sie ueber den Support und in den Vertragsunterlagen.",
+        "Ja. Informationen zur Auftragsverarbeitung erhalten Sie über den Support und in den Vertragsunterlagen.",
     },
   ];
 
@@ -73,7 +73,7 @@ export default function LandingPage() {
               Problem
             </a>
             <a href="#loesung" className="transition-colors hover:text-[#2D6A4F]">
-              Loesung
+              Lösung
             </a>
             <a href="#sicherheit" className="transition-colors hover:text-[#2D6A4F]">
               Sicherheit
@@ -112,12 +112,12 @@ export default function LandingPage() {
       <section className="relative overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 py-24 text-center sm:px-6 sm:py-32 lg:px-8">
           <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
-            Ernaehrungsplanung fuer Einrichtungen{" "}
+            Ernährungsplanung für Einrichtungen{" "}
             <span className="text-[#2D6A4F]">klar, schnell, nachvollziehbar</span>
           </h1>
           <p className="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-gray-600 sm:text-xl">
-            NutriKompass unterstuetzt Teams in der Betreuung von Jugendlichen mit
-            Essstoerungen. Die KI erstellt Vorschlaege, die fachliche Entscheidung
+            NutriKompass unterstützt Teams in der Betreuung von Jugendlichen mit
+            Essstörungen. Die KI erstellt Vorschläge, die fachliche Entscheidung
             bleibt bei Ihrem Team.
           </p>
           <ul className="mx-auto mt-8 grid max-w-3xl grid-cols-1 gap-3 text-left sm:grid-cols-3">
@@ -131,7 +131,7 @@ export default function LandingPage() {
             </li>
             <li className="rounded-xl border border-gray-200 bg-white p-4 text-sm">
               <BadgeCheck className="mb-2 h-5 w-5 text-[#2D6A4F]" />
-              Transparente Prozesse fuer Vertretung
+              Transparente Prozesse für Vertretung
             </li>
           </ul>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -149,7 +149,7 @@ export default function LandingPage() {
             </a>
           </div>
           <p className="mt-4 text-xs text-gray-500">
-            Kein Heilversprechen. Kein Ersatz fuer aerztliche Diagnose oder Behandlung.
+            Kein Heilversprechen. Kein Ersatz für ärztliche Diagnose oder Behandlung.
           </p>
         </div>
 
@@ -166,19 +166,19 @@ export default function LandingPage() {
               Wenn Planung Zeit frisst, leidet die Versorgung
             </h2>
             <p className="mt-4 text-gray-600">
-              Im Alltag fehlen oft Zeit und einheitliche Ablaeufe. Das fuehrt zu
+              Im Alltag fehlen oft Zeit und einheitliche Abläufe. Das führt zu
               Unsicherheit bei Vertretung und vermeidbarer Mehrarbeit.
             </p>
           </div>
           <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div className="rounded-xl border border-gray-200 bg-white p-6 text-sm">
-              Hoher Abstimmungsaufwand zwischen Fachkraeften und Schichten
+              Hoher Abstimmungsaufwand zwischen Fachkräften und Schichten
             </div>
             <div className="rounded-xl border border-gray-200 bg-white p-6 text-sm">
-              Medienbrueche zwischen Planung, Einkauf und Dokumentation
+              Medienbrüche zwischen Planung, Einkauf und Dokumentation
             </div>
             <div className="rounded-xl border border-gray-200 bg-white p-6 text-sm">
-              Uneinheitliche Qualitaet bei Vertretungssituationen
+              Uneinheitliche Qualität bei Vertretungssituationen
             </div>
           </div>
         </div>
@@ -201,9 +201,9 @@ export default function LandingPage() {
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-[#2D6A4F]/10">
                 <Sparkles className="h-6 w-6 text-[#2D6A4F]" />
               </div>
-              <h3 className="mb-2 text-lg font-semibold">KI-Vorschlaege</h3>
+              <h3 className="mb-2 text-lg font-semibold">KI-Vorschläge</h3>
               <p className="text-sm text-gray-600">
-                Vorschlaege fuer 1- bis 14-Tage-Plaene auf Basis Ihrer Eingaben.
+                Vorschläge für 1- bis 14-Tage-Pläne auf Basis Ihrer Eingaben.
               </p>
             </div>
 
@@ -213,7 +213,7 @@ export default function LandingPage() {
               </div>
               <h3 className="mb-2 text-lg font-semibold">Einkaufslisten</h3>
               <p className="text-sm text-gray-600">
-                Automatisch aus freigegebenen Plaenen, sortiert nach Kategorien.
+                Automatisch aus freigegebenen Plänen, sortiert nach Kategorien.
               </p>
             </div>
 
@@ -223,7 +223,7 @@ export default function LandingPage() {
               </div>
               <h3 className="mb-2 text-lg font-semibold">PDF-Export</h3>
               <p className="text-sm text-gray-600">
-                Plaene und Listen druckbar oder digital teilbar.
+                Pläne und Listen druckbar oder digital teilbar.
               </p>
             </div>
 
@@ -233,7 +233,7 @@ export default function LandingPage() {
               </div>
               <h3 className="mb-2 text-lg font-semibold">Sicherheitsfokus</h3>
               <p className="text-sm text-gray-600">
-                Rollen, Zugriffskontrolle und dokumentierte Prozesse fuer den
+                Rollen, Zugriffskontrolle und dokumentierte Prozesse für den
                 Datenschutz.
               </p>
             </div>
@@ -260,7 +260,7 @@ export default function LandingPage() {
             </h2>
             <p className="mt-4 text-gray-600">
               Klare Produktgrenzen und nachvollziehbare Prozesse helfen bei einer
-              verlaesslichen Zusammenarbeit im Alltag.
+              verlässlichen Zusammenarbeit im Alltag.
             </p>
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -279,7 +279,7 @@ export default function LandingPage() {
             <div className="rounded-xl border border-gray-200 bg-white p-6 text-center">
               <p className="text-3xl font-extrabold text-[#2D6A4F]">3 / 10</p>
               <p className="mt-1 text-sm text-gray-600">
-                Test-Limits: aktive Patienten / Plaene pro Monat
+                Test-Limits: aktive Patienten / Pläne pro Monat
               </p>
             </div>
           </div>
@@ -305,9 +305,9 @@ export default function LandingPage() {
               <p className="text-xs font-semibold uppercase tracking-wide text-[#2D6A4F]">
                 Schritt 2
               </p>
-              <p className="mt-2 text-base font-semibold">Vorschlag pruefen</p>
+              <p className="mt-2 text-base font-semibold">Vorschlag prüfen</p>
               <p className="mt-2 text-sm text-gray-600">
-                KI-Vorschlaege fachlich kontrollieren und bei Bedarf anpassen.
+                KI-Vorschläge fachlich kontrollieren und bei Bedarf anpassen.
               </p>
             </div>
             <div className="rounded-xl border border-gray-200 p-6">
@@ -343,7 +343,7 @@ export default function LandingPage() {
               <ul className="space-y-3 text-sm text-gray-700">
                 <li className="flex items-start gap-2">
                   <Check className="mt-0.5 h-5 w-5 shrink-0 text-[#2D6A4F]" />
-                  Rollen- und Rechtekonzept fuer kontrollierten Zugriff
+                  Rollen- und Rechtekonzept für kontrollierten Zugriff
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="mt-0.5 h-5 w-5 shrink-0 text-[#2D6A4F]" />
@@ -363,7 +363,7 @@ export default function LandingPage() {
               <ul className="space-y-3 text-sm text-gray-700">
                 <li className="flex items-start gap-2">
                   <Check className="mt-0.5 h-5 w-5 shrink-0 text-[#2D6A4F]" />
-                  KI erstellt Vorschlaege, keine automatischen Therapieentscheidungen
+                  KI erstellt Vorschläge, keine automatischen Therapieentscheidungen
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="mt-0.5 h-5 w-5 shrink-0 text-[#2D6A4F]" />
@@ -371,7 +371,7 @@ export default function LandingPage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="mt-0.5 h-5 w-5 shrink-0 text-[#2D6A4F]" />
-                  Kein Heilversprechen, kein Ersatz fuer medizinische Betreuung
+                  Kein Heilversprechen, kein Ersatz für medizinische Betreuung
                 </li>
               </ul>
             </div>
@@ -384,7 +384,7 @@ export default function LandingPage() {
           <div className="mb-16 text-center">
             <h2 className="text-3xl font-bold sm:text-4xl">Transparente Preise</h2>
             <p className="mx-auto mt-4 max-w-xl text-gray-600">
-              Starten Sie kostenlos und waehlen Sie spaeter den Plan, der zu Ihrer
+              Starten Sie kostenlos und wählen Sie später den Plan, der zu Ihrer
               Einrichtung passt.
             </p>
           </div>
@@ -399,7 +399,7 @@ export default function LandingPage() {
               <ul className="mt-8 flex-1 space-y-3">
                 <li className="flex items-start gap-2 text-sm">
                   <Check className="mt-0.5 h-5 w-5 shrink-0 text-[#2D6A4F]" />
-                  KI-Vorschlaege, Einkaufslisten und PDF-Export
+                  KI-Vorschläge, Einkaufslisten und PDF-Export
                 </li>
                 <li className="flex items-start gap-2 text-sm">
                   <Check className="mt-0.5 h-5 w-5 shrink-0 text-[#2D6A4F]" />
@@ -407,7 +407,7 @@ export default function LandingPage() {
                 </li>
                 <li className="flex items-start gap-2 text-sm">
                   <Check className="mt-0.5 h-5 w-5 shrink-0 text-[#2D6A4F]" />
-                  10 Plaene pro Monat
+                  10 Pläne pro Monat
                 </li>
                 <li className="flex items-start gap-2 text-sm">
                   <Check className="mt-0.5 h-5 w-5 shrink-0 text-[#2D6A4F]" />
@@ -428,7 +428,7 @@ export default function LandingPage() {
                 <span className="text-4xl font-extrabold">29 EUR</span>
                 <span className="text-sm text-gray-500">/Monat</span>
               </div>
-              <p className="mt-2 text-sm text-gray-600">Fuer kleinere Einrichtungen</p>
+              <p className="mt-2 text-sm text-gray-600">Für kleinere Einrichtungen</p>
               <ul className="mt-8 flex-1 space-y-3">
                 <li className="flex items-start gap-2 text-sm">
                   <Check className="mt-0.5 h-5 w-5 shrink-0 text-[#2D6A4F]" />
@@ -436,7 +436,7 @@ export default function LandingPage() {
                 </li>
                 <li className="flex items-start gap-2 text-sm">
                   <Check className="mt-0.5 h-5 w-5 shrink-0 text-[#2D6A4F]" />
-                  50 Plaene pro Monat
+                  50 Pläne pro Monat
                 </li>
                 <li className="flex items-start gap-2 text-sm">
                   <Check className="mt-0.5 h-5 w-5 shrink-0 text-[#2D6A4F]" />
@@ -447,7 +447,7 @@ export default function LandingPage() {
                 href="/register?plan=basic"
                 className="mt-8 inline-flex items-center justify-center rounded-xl border border-[#2D6A4F] bg-white px-6 py-3 text-sm font-semibold text-[#2D6A4F] transition-colors hover:bg-[#2D6A4F]/5"
               >
-                Basis waehlen
+                Basis wählen
               </Link>
             </div>
 
@@ -460,7 +460,7 @@ export default function LandingPage() {
                 <span className="text-4xl font-extrabold">59 EUR</span>
                 <span className="text-sm text-white/70">/Monat</span>
               </div>
-              <p className="mt-2 text-sm text-white/80">Fuer wachsende Einrichtungen</p>
+              <p className="mt-2 text-sm text-white/80">Für wachsende Einrichtungen</p>
               <ul className="mt-8 flex-1 space-y-3">
                 <li className="flex items-start gap-2 text-sm">
                   <Check className="mt-0.5 h-5 w-5 shrink-0 text-[#74C69D]" />
@@ -468,18 +468,18 @@ export default function LandingPage() {
                 </li>
                 <li className="flex items-start gap-2 text-sm">
                   <Check className="mt-0.5 h-5 w-5 shrink-0 text-[#74C69D]" />
-                  Unbegrenzt Plaene
+                  Unbegrenzt Pläne
                 </li>
                 <li className="flex items-start gap-2 text-sm">
                   <Check className="mt-0.5 h-5 w-5 shrink-0 text-[#74C69D]" />
-                  Prioritaets-Support
+                  Prioritäts-Support
                 </li>
               </ul>
               <Link
                 href="/register?plan=professional"
                 className="mt-8 inline-flex items-center justify-center rounded-xl bg-white px-6 py-3 text-sm font-semibold text-[#2D6A4F] transition-colors hover:bg-gray-100"
               >
-                Professional waehlen
+                Professional wählen
               </Link>
             </div>
           </div>
@@ -488,8 +488,8 @@ export default function LandingPage() {
             <p className="font-semibold">Zahlungs- und Vertragsinformationen</p>
             <ul className="mt-3 space-y-2">
               <li>Abrechnung monatlich. Alle Preise zzgl. gesetzlicher USt, sofern anwendbar.</li>
-              <li>Mindestlaufzeit, Kuendigungsfrist und Verlaengerung werden vor Abschluss transparent angezeigt.</li>
-              <li>Zahlungsabwicklung erfolgt im Checkout ueber Stripe.</li>
+              <li>Mindestlaufzeit, Kündigungsfrist und Verlängerung werden vor Abschluss transparent angezeigt.</li>
+              <li>Zahlungsabwicklung erfolgt im Checkout über Stripe.</li>
               <li>
                 Rechtliche Details:{" "}
                 <Link href="/agb" className="underline underline-offset-2 hover:text-[#2D6A4F]">
@@ -511,7 +511,7 @@ export default function LandingPage() {
       <section id="faq" className="py-20 sm:py-24">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <div className="mb-12 text-center">
-            <h2 className="text-3xl font-bold sm:text-4xl">Haeufige Fragen</h2>
+            <h2 className="text-3xl font-bold sm:text-4xl">Häufige Fragen</h2>
           </div>
           <div className="space-y-4">
             {faqs.map((item) => (
@@ -532,10 +532,10 @@ export default function LandingPage() {
       <section className="border-y border-gray-200 bg-white py-20">
         <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold sm:text-4xl">
-            Struktur in die Ernaehrungsplanung bringen
+            Struktur in die Ernährungsplanung bringen
           </h2>
           <p className="mt-4 text-gray-600">
-            Starten Sie mit einem unverbindlichen Test und pruefen Sie, ob
+            Starten Sie mit einem unverbindlichen Test und prüfen Sie, ob
             NutriKompass zu Ihrem Alltag passt.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -591,3 +591,5 @@ export default function LandingPage() {
     </div>
   );
 }
+
+

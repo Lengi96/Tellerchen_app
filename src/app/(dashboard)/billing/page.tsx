@@ -30,7 +30,7 @@ const planInfo = {
 const statusInfo: Record<string, { label: string; color: string }> = {
   TRIALING: { label: "Testphase", color: "bg-yellow-100 text-yellow-800" },
   ACTIVE: { label: "Aktiv", color: "bg-green-100 text-green-800" },
-  CANCELED: { label: "Gekuendigt", color: "bg-red-100 text-red-800" },
+  CANCELED: { label: "Gekündigt", color: "bg-red-100 text-red-800" },
   PAST_DUE: { label: "Zahlung ausstehend", color: "bg-orange-100 text-orange-800" },
   UNPAID: { label: "Unbezahlt", color: "bg-red-100 text-red-800" },
 };
@@ -115,7 +115,7 @@ export default function BillingPage() {
                 Ihre Testphase ist abgelaufen
               </p>
               <p className="text-sm text-muted-foreground">
-                Bitte waehlen Sie einen Plan, um NutriKompass weiter nutzen zu koennen.
+                Bitte wählen Sie einen Plan, um NutriKompass weiter nutzen zu können.
               </p>
             </div>
           </CardContent>
@@ -131,7 +131,7 @@ export default function BillingPage() {
                 {trialDaysLeft} {trialDaysLeft === 1 ? "Tag" : "Tage"} Testphase verbleibend
               </p>
               <p className="text-sm text-yellow-700">
-                Upgraden Sie jetzt, um NutriKompass ohne Einschraenkungen zu nutzen.
+                Upgraden Sie jetzt, um NutriKompass ohne Einschränkungen zu nutzen.
               </p>
             </div>
           </CardContent>
@@ -222,11 +222,11 @@ export default function BillingPage() {
               </div>
             </div>
 
-            {/* Plaene diesen Monat */}
+            {/* Pläne diesen Monat */}
             <div>
               <div className="flex items-center justify-between text-sm mb-1.5">
                 <span className="text-muted-foreground">
-                  Ernaehrungsplaene (diesen Monat)
+                  Ernährungspläne (diesen Monat)
                 </span>
                 <span className="font-medium text-text-main">
                   {usage?.plansThisMonth.current ?? 0} /{" "}
@@ -261,7 +261,7 @@ export default function BillingPage() {
       {plan !== "PROFESSIONAL" && (
         <div>
           <h3 className="text-lg font-semibold text-text-main mb-4">
-            {plan === "TRIAL" ? "Plan waehlen" : "Upgrade"}
+            {plan === "TRIAL" ? "Plan wählen" : "Upgrade"}
           </h3>
           <div className="grid gap-6 md:grid-cols-2">
             {/* Basis Plan */}
@@ -271,7 +271,7 @@ export default function BillingPage() {
                   <CardTitle className="flex items-center gap-2 text-text-main">
                     Basis
                   </CardTitle>
-                  <CardDescription>Fuer kleinere Einrichtungen</CardDescription>
+                  <CardDescription>Für kleinere Einrichtungen</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-baseline gap-1">
@@ -287,7 +287,7 @@ export default function BillingPage() {
                     </li>
                     <li className="flex items-center gap-2 text-sm">
                       <Check className="h-4 w-4 text-primary" />
-                      50 Plaene pro Monat
+                      50 Pläne pro Monat
                     </li>
                     <li className="flex items-center gap-2 text-sm">
                       <Check className="h-4 w-4 text-primary" />
@@ -302,7 +302,7 @@ export default function BillingPage() {
                     {upgradingPlan === "BASIC" ? (
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     ) : null}
-                    {plan === "TRIAL" ? "Basis waehlen" : "Auf Basis upgraden"}
+                    {plan === "TRIAL" ? "Basis wählen" : "Auf Basis upgraden"}
                   </Button>
                 </CardContent>
               </Card>
@@ -318,7 +318,7 @@ export default function BillingPage() {
                   <Crown className="h-5 w-5 text-primary" />
                   Professional
                 </CardTitle>
-                <CardDescription>Fuer wachsende Einrichtungen</CardDescription>
+                <CardDescription>Für wachsende Einrichtungen</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-baseline gap-1">
@@ -334,11 +334,11 @@ export default function BillingPage() {
                   </li>
                   <li className="flex items-center gap-2 text-sm">
                     <Check className="h-4 w-4 text-primary" />
-                    Unbegrenzt Plaene
+                    Unbegrenzt Pläne
                   </li>
                   <li className="flex items-center gap-2 text-sm">
                     <Check className="h-4 w-4 text-primary" />
-                    Prioritaets-Support
+                    Prioritäts-Support
                   </li>
                 </ul>
                 <Button
@@ -350,7 +350,7 @@ export default function BillingPage() {
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   ) : null}
                   {plan === "TRIAL"
-                    ? "Professional waehlen"
+                    ? "Professional wählen"
                     : "Auf Professional upgraden"}
                 </Button>
               </CardContent>

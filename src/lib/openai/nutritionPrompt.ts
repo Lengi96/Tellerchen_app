@@ -4,9 +4,9 @@ import { getOpenAIClient } from "./client";
 const ingredientSchema = z.object({
   name: z.string(),
   amount: z.number(),
-  unit: z.enum(["g", "ml", "StÃ¼ck", "EL", "TL"]),
+  unit: z.enum(["g", "ml", "Stück", "EL", "TL"]),
   category: z.enum([
-    "GemÃ¼se & Obst",
+    "Gemüse & Obst",
     "Protein",
     "Milchprodukte",
     "Kohlenhydrate",
@@ -66,18 +66,18 @@ const DAY_NAMES = [
 const BASE_MEAL_LIBRARY = {
   "Frühstück": [
     "Overnight-Oats mit Banane",
-    "Vollkornbrot mit FrischkÃ¤se und Gurke",
+    "Vollkornbrot mit Frischkäse und Gurke",
     "Joghurt-Bowl mit Haferflocken",
-    "RÃ¼hrei mit Vollkorntoast",
+    "Rührei mit Vollkorntoast",
   ],
   "Mittagessen": [
     "Linsencurry mit Reis",
-    "Pasta mit Tomatensauce und GemÃ¼se",
-    "Kartoffelpfanne mit KrÃ¤uterquark",
+    "Pasta mit Tomatensauce und Gemüse",
+    "Kartoffelpfanne mit Kräuterquark",
     "Reis-Bowl mit Kichererbsen",
   ],
   "Abendessen": [
-    "GemÃ¼seomelett mit Ofenkartoffeln",
+    "Gemüseomelett mit Ofenkartoffeln",
     "Wraps mit Bohnen und Salat",
     "Couscous-Salat mit Feta",
     "Vollkornbrotzeit mit Rohkost",
@@ -86,7 +86,7 @@ const BASE_MEAL_LIBRARY = {
     "Apfel mit Nussmus",
     "Quark mit Beeren",
     "Haferkekse und Banane",
-    "Joghurt mit NÃ¼ssen",
+    "Joghurt mit Nüssen",
   ],
 } as const;
 
@@ -192,7 +192,7 @@ function findVarietyIssues(days: DayPlanData[]): number[] {
 }
 
 function buildFallbackRecipe(mealName: string): string {
-  return `Alle Zutaten exakt abwiegen (z. B. 180 g Beilage, 120 g Proteinquelle, 150 g Gemuese, 1 EL Oel) und griffbereit stellen; Beilage nach Packungsangabe garen und dabei die Garzeit auf 10-12 Minuten timen; Proteinquelle in einer beschichteten Pfanne mit 1 EL Oel bei mittlerer Hitze 4-6 Minuten anbraten und einmal wenden; Gemuese zugeben, 50 ml Wasser oder Sauce einruehren und weitere 6-8 Minuten sanft garen; Mit Salz, Pfeffer und Kraeutern abschmecken, dann alles portionsgerecht anrichten; Tipp: Fuer ${mealName} die Sauce erst am Ende zugeben, damit Konsistenz und Naehrstoffe erhalten bleiben.`;
+  return `Alle Zutaten exakt abwiegen (z. B. 180 g Beilage, 120 g Proteinquelle, 150 g Gemüse, 1 EL Öl) und griffbereit stellen; Beilage nach Packungsangabe garen und dabei die Garzeit auf 10-12 Minuten timen; Proteinquelle in einer beschichteten Pfanne mit 1 EL Öl bei mittlerer Hitze 4-6 Minuten anbraten und einmal wenden; Gemüse zugeben, 50 ml Wasser oder Sauce einrühren und weitere 6-8 Minuten sanft garen; Mit Salz, Pfeffer und Kräutern abschmecken, dann alles portionsgerecht anrichten; Tipp: Für ${mealName} die Sauce erst am Ende zugeben, damit Konsistenz und Nährstoffe erhalten bleiben.`;
 }
 
 function createFallbackMeal(
@@ -220,9 +220,9 @@ function createFallbackMeal(
     fat: Math.round(kcal * 0.3 / 9),
     ingredients: [
       { name: "Hauptzutat", amount: 180, unit: "g" as const, category: "Kohlenhydrate" as const },
-      { name: "GemÃ¼se", amount: 150, unit: "g" as const, category: "GemÃ¼se & Obst" as const },
+      { name: "Gemüse", amount: 150, unit: "g" as const, category: "Gemüse & Obst" as const },
       { name: "Proteinquelle", amount: 120, unit: "g" as const, category: "Protein" as const },
-      { name: "Ã–l", amount: 1, unit: "EL" as const, category: "Sonstiges" as const },
+      { name: "Öl", amount: 1, unit: "EL" as const, category: "Sonstiges" as const },
     ],
   };
 }
@@ -312,8 +312,8 @@ export async function generateMealPlan(
 
   onProgress?.(`Erstelle Gesamtplan (${numDays} Tage)...`);
 
-  const systemPrompt = `Du bist ein spezialisierter ErnÃ¤hrungsplaner.
-Gib AUSSCHLIESSLICH ein valides JSON-Objekt zurÃ¼ck.
+  const systemPrompt = `Du bist ein spezialisierter Ernährungsplaner.
+Gib AUSSCHLIESSLICH ein valides JSON-Objekt zurück.
 
 Format:
 {
@@ -334,8 +334,8 @@ Format:
             {
               "name": "string",
               "amount": number,
-              "unit": "g" | "ml" | "StÃ¼ck" | "EL" | "TL",
-              "category": "GemÃ¼se & Obst" | "Protein" | "Milchprodukte" | "Kohlenhydrate" | "Sonstiges"
+              "unit": "g" | "ml" | "Stück" | "EL" | "TL",
+              "category": "Gemüse & Obst" | "Protein" | "Milchprodukte" | "Kohlenhydrate" | "Sonstiges"
             }
           ]
         }
@@ -354,20 +354,20 @@ Regeln:
 - Rezept je Mahlzeit mit klaren Arbeitsschritten, Zeitangaben und Hitzehinweisen (z. B. mittlere Hitze, 8 Minuten).
 - In jedem Rezept konkrete Mengen aus den Zutaten verwenden (z. B. 120 g, 1 EL, 200 ml).
 - Letzter Rezeptschritt beginnt immer mit "Tipp:" und gibt einen praktischen Zubereitungshinweis.
-- ${fixedMealTypes.length > 0 ? `Diese Mahlzeiten muessen jeden Tag identisch sein (Name, Rezept, Zutaten): ${fixedMealTypes.join(", ")}.` : "Wenn keine fixen Mahlzeiten vorgegeben sind, variiere die Gerichte ueber die Tage."}
+- ${fixedMealTypes.length > 0 ? `Diese Mahlzeiten müssen jeden Tag identisch sein (Name, Rezept, Zutaten): ${fixedMealTypes.join(", ")}.` : "Wenn keine fixen Mahlzeiten vorgegeben sind, variiere die Gerichte über die Tage."}
 - Allergien strikt beachten.
-- Kein Zusatztext, kein Markdown, keine CodeblÃ¶cke.`;
+- Kein Zusatztext, kein Markdown, keine Codeblöcke.`;
 
   const userPrompt = `Patient:
 - Alter: ${age}
 - Aktuelles Gewicht: ${patient.currentWeight} kg
 - Zielgewicht: ${patient.targetWeight} kg
-- Allergien/UnvertrÃ¤glichkeiten: ${allergiesText}
+- Allergien/Unverträglichkeiten: ${allergiesText}
 - Besondere Hinweise: ${notesText}
 - Selbstständigkeit/Absprachen: ${autonomyText}
-${fixedMealTypes.length > 0 ? `- Feste Mahlzeiten (taeglich gleich): ${fixedMealTypes.join(", ")}` : ""}
+${fixedMealTypes.length > 0 ? `- Feste Mahlzeiten (täglich gleich): ${fixedMealTypes.join(", ")}` : ""}
 
-Erstelle den vollstÃ¤ndigen ${numDays}-Tage-Plan in genau einem JSON-Objekt im geforderten Format.`;
+Erstelle den vollständigen ${numDays}-Tage-Plan in genau einem JSON-Objekt im geforderten Format.`;
 
   let parsedPlan: MealPlanData | null = null;
   const maxTokens = Math.min(3800, 700 + numDays * 400);
@@ -414,7 +414,7 @@ Erstelle den vollstÃ¤ndigen ${numDays}-Tage-Plan in genau einem JSON-Objekt im
   findVarietyIssues(parsedPlan.days);
 
   const result = mealPlanSchema.safeParse(parsedPlan);
-  if (!result.success) throw new Error("Der erzeugte Plan ist ungueltig.");
+  if (!result.success) throw new Error("Der erzeugte Plan ist ungültig.");
   onProgress?.(`Plan erstellt (${numDays}/${numDays})...`);
 
   return {

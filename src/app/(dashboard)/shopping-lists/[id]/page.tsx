@@ -1,7 +1,7 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { trpc } from "@/trpc/client";
 import {
@@ -13,8 +13,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowLeft, Loader2, FileDown, ShoppingCart } from "lucide-react";
+import { ArrowLeft, Loader2, FileDown, ShoppingCart, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import type { MealPlanData } from "@/lib/openai/nutritionPrompt";
 
 interface ShoppingItem {
   name: string;
@@ -33,6 +34,7 @@ const categoryEmojis: Record<string, string> = {
 
 export default function ShoppingListDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const listId = params.id as string;
   const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set());
   const [isExporting, setIsExporting] = useState(false);
@@ -43,6 +45,15 @@ export default function ShoppingListDetailPage() {
 
   const { data: shoppingList, isLoading } = trpc.shoppingList.getById.useQuery({
     id: listId,
+  });
+  const deleteShoppingList = trpc.shoppingList.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Einkaufsliste wurde gelöscht.");
+      router.push("/shopping-lists");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Einkaufsliste konnte nicht gelöscht werden.");
+    },
   });
 
   if (isLoading) {
@@ -61,10 +72,10 @@ export default function ShoppingListDetailPage() {
     );
   }
 
-  const items = shoppingList.itemsJson as unknown as Record<
-    string,
-    ShoppingItem[]
-  >;
+  const rawItems = shoppingList.itemsJson as unknown as Record<string, ShoppingItem[]>;
+  const items = isTooCoarseGroupedItems(rawItems)
+    ? rebuildGroupedItemsFromPlan(shoppingList.mealPlan.planJson) ?? rawItems
+    : rawItems;
   const totalItems = Object.values(items).reduce(
     (sum, arr) => sum + arr.length,
     0
@@ -150,19 +161,36 @@ export default function ShoppingListDetailPage() {
             {new Date(weekStart).toLocaleDateString("de-DE")}
           </p>
         </div>
-        <Button
-          variant="outline"
-          className="rounded-xl"
-          onClick={handlePdfExport}
-          disabled={isExporting}
-        >
-          {isExporting ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          ) : (
-            <FileDown className="mr-2 h-4 w-4" />
-          )}
-          Als PDF drucken
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            className="rounded-xl"
+            onClick={handlePdfExport}
+            disabled={isExporting}
+          >
+            {isExporting ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <FileDown className="mr-2 h-4 w-4" />
+            )}
+            Als PDF drucken
+          </Button>
+          <Button
+            variant="outline"
+            className="rounded-xl text-destructive hover:text-destructive"
+            disabled={deleteShoppingList.isPending}
+            onClick={() => {
+              const ok = window.confirm(
+                "Einkaufsliste wirklich löschen? Dieser Vorgang kann nicht rückgängig gemacht werden."
+              );
+              if (!ok) return;
+              deleteShoppingList.mutate({ id: listId });
+            }}
+          >
+            <Trash2 className="mr-2 h-4 w-4" />
+            Löschen
+          </Button>
+        </div>
       </div>
 
       {inlineFeedback && (
@@ -266,3 +294,67 @@ export default function ShoppingListDetailPage() {
     </div>
   );
 }
+
+function isTooCoarseGroupedItems(grouped: Record<string, ShoppingItem[]>): boolean {
+  const categories = Object.keys(grouped);
+  const totalItems = Object.values(grouped).reduce((sum, arr) => sum + arr.length, 0);
+  if (totalItems === 0) return false;
+  if (totalItems > categories.length + 1) return false;
+
+  return Object.entries(grouped).every(([category, arr]) => {
+    if (arr.length === 0) return true;
+    if (arr.length > 1) return false;
+    const name = arr[0]?.name?.toLowerCase?.().trim?.() ?? "";
+    const categoryName = category.toLowerCase().trim();
+    return name === categoryName || name.includes(categoryName);
+  });
+}
+
+function rebuildGroupedItemsFromPlan(planJson?: unknown): Record<string, ShoppingItem[]> | null {
+  if (!planJson) return null;
+  const plan = planJson as MealPlanData;
+  if (!plan?.days?.length) return null;
+
+  const ingredientMap = new Map<string, ShoppingItem>();
+  for (const day of plan.days) {
+    for (const meal of day.meals) {
+      for (const ingredient of meal.ingredients) {
+        const key = `${ingredient.name.toLowerCase()}_${ingredient.unit}`;
+        const existing = ingredientMap.get(key);
+        if (existing) {
+          existing.amount += ingredient.amount;
+        } else {
+          ingredientMap.set(key, {
+            name: ingredient.name,
+            amount: ingredient.amount,
+            unit: ingredient.unit,
+            category: ingredient.category,
+          });
+        }
+      }
+    }
+  }
+
+  const grouped: Record<string, ShoppingItem[]> = {
+    "Gemüse & Obst": [],
+    Protein: [],
+    Milchprodukte: [],
+    Kohlenhydrate: [],
+    Sonstiges: [],
+  };
+
+  for (const item of Array.from(ingredientMap.values())) {
+    const category = grouped[item.category] ? item.category : "Sonstiges";
+    grouped[category].push({
+      ...item,
+      amount: Math.round(item.amount),
+    });
+  }
+
+  for (const category of Object.keys(grouped)) {
+    grouped[category].sort((a, b) => a.name.localeCompare(b.name, "de"));
+  }
+
+  return grouped;
+}
+

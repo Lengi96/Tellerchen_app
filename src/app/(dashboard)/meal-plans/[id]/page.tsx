@@ -96,7 +96,7 @@ export default function MealPlanDetailPage() {
   if (!plan) {
     return (
       <div className="text-center py-20 text-muted-foreground">
-        <p>ErnÃ¤hrungsplan nicht gefunden.</p>
+        <p>Ernährungsplan nicht gefunden.</p>
       </div>
     );
   }
@@ -110,7 +110,7 @@ export default function MealPlanDetailPage() {
   );
   const avgDailyKcal = Math.round(weekTotalKcal / totalDays);
 
-  // Makros fÃ¼r die ganze Woche
+  // Makros für die ganze Woche
   const weekMacros = planData.days.reduce(
     (acc, day) => {
       for (const meal of day.meals) {
@@ -144,13 +144,13 @@ export default function MealPlanDetailPage() {
 
   return (
     <div className="space-y-6">
-      {/* ZurÃ¼ck-Link */}
+      {/* Zurück-Link */}
       <Link
         href={`/patients/${plan.patientId}`}
         className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-text-main"
       >
         <ArrowLeft className="h-4 w-4" />
-        ZurÃ¼ck zur Bewohner:in
+        Zurück zur Bewohner:in
       </Link>
 
       {/* Plan-Header */}
@@ -159,7 +159,7 @@ export default function MealPlanDetailPage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <CardTitle className="text-xl text-text-main">
-                ErnÃ¤hrungsplan â€“ {plan.patient.pseudonym}
+                Ernährungsplan – {plan.patient.pseudonym}
                 {planHint ? (
                   <span className="ml-1 text-base font-medium text-muted-foreground">
                     ({planHint})
@@ -230,7 +230,7 @@ export default function MealPlanDetailPage() {
               variant="secondary"
               className="rounded-xl bg-secondary/20 text-secondary-600 text-base px-4 py-1"
             >
-              Ã˜ {avgDailyKcal} kcal/Tag
+              Ø {avgDailyKcal} kcal/Tag
             </Badge>
             <Badge
               variant="secondary"
@@ -243,21 +243,21 @@ export default function MealPlanDetailPage() {
               className="rounded-xl bg-blue-50 text-blue-600 text-sm px-3 py-1 flex items-center gap-1"
             >
               <Beef className="h-3.5 w-3.5" />
-              Ã˜ {avgMacros.protein}g P / {Math.round(weekMacros.protein)}g/Wo
+              Ø {avgMacros.protein}g P / {Math.round(weekMacros.protein)}g/Wo
             </Badge>
             <Badge
               variant="secondary"
               className="rounded-xl bg-amber-50 text-amber-600 text-sm px-3 py-1 flex items-center gap-1"
             >
               <Wheat className="h-3.5 w-3.5" />
-              Ã˜ {avgMacros.carbs}g K / {Math.round(weekMacros.carbs)}g/Wo
+              Ø {avgMacros.carbs}g K / {Math.round(weekMacros.carbs)}g/Wo
             </Badge>
             <Badge
               variant="secondary"
               className="rounded-xl bg-amber-50 text-amber-600 text-sm px-3 py-1 flex items-center gap-1"
             >
               <Droplets className="h-3.5 w-3.5" />
-              Ã˜ {avgMacros.fat}g F / {Math.round(weekMacros.fat)}g/Wo
+              Ø {avgMacros.fat}g F / {Math.round(weekMacros.fat)}g/Wo
             </Badge>
           </div>
           {(() => {
@@ -265,7 +265,7 @@ export default function MealPlanDetailPage() {
             if (ag) {
               const parts: string[] = [];
               if (ag.canPortionIndependent) {
-                parts.push("Darf vollstÃ¤ndig eigenstÃ¤ndig portionieren");
+                parts.push("Darf vollständig eigenständig portionieren");
               } else if (ag.canPortionSupervised) {
                 parts.push("Darf unter Aufsicht portionieren");
               }
@@ -451,7 +451,7 @@ export default function MealPlanDetailPage() {
                               {recipeSteps.length > 0 ? (
                                 <div className="rounded-lg border bg-white p-2">
                                   <p className="text-xs font-medium text-text-main">
-                                    Schritt-fÃ¼r-Schritt-Anleitung
+                                    Schritt-für-Schritt-Anleitung
                                   </p>
                                   <ol className="mt-1 list-decimal space-y-1 pl-4 text-xs text-text-main/80">
                                     {recipeSteps.map((step, idx) => (
@@ -462,7 +462,7 @@ export default function MealPlanDetailPage() {
                               ) : null}
                               {(tipSteps[0] || "").length > 0 && (
                                 <div className="rounded-lg border border-amber-200 bg-amber-50 px-2 py-1.5 text-xs text-amber-700">
-                                  <span className="font-medium">KÃ¼chentipp:</span>{" "}
+                                  <span className="font-medium">Küchentipp:</span>{" "}
                                   {tipSteps[0].replace(/^tipp:\s*/i, "")}
                                 </div>
                               )}
@@ -642,7 +642,7 @@ function getMealTypeMeta(mealType: string): {
   icon: typeof Coffee;
 } {
   switch (mealType) {
-    case "FrÃ¼hstÃ¼ck":
+    case "Frühstück":
       return { icon: Coffee };
     case "Mittagessen":
       return { icon: UtensilsCrossed };

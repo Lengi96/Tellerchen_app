@@ -31,8 +31,8 @@ export default function BillingSuccessPage() {
               Zahlung erfolgreich!
             </h2>
             <p className="text-muted-foreground">
-              Vielen Dank! Ihr Abonnement wurde aktiviert. Sie koennen NutriKompass
-              jetzt ohne Einschraenkungen nutzen.
+              Vielen Dank! Ihr Abonnement wurde aktiviert. Sie können NutriKompass
+              jetzt ohne Einschränkungen nutzen.
             </p>
           </div>
 

@@ -12,7 +12,7 @@ const MEAL_TYPE_VALUES = [
   "Snack",
 ] as const;
 
-// Sicherheitshinweis: Rate Limiting â€“ Max 10 Generierungen pro User pro Stunde
+// Sicherheitshinweis: Rate Limiting – Max 10 Generierungen pro User pro Stunde
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 
 function checkRateLimit(userId: string): void {
@@ -28,7 +28,7 @@ function checkRateLimit(userId: string): void {
     throw new TRPCError({
       code: "TOO_MANY_REQUESTS",
       message:
-        "Sie haben das Limit von 10 Plan-Generierungen pro Stunde erreicht. Bitte versuchen Sie es spÃ¤ter erneut.",
+        "Sie haben das Limit von 10 Plan-Generierungen pro Stunde erreicht. Bitte versuchen Sie es später erneut.",
     });
   }
 
@@ -61,7 +61,7 @@ function setProgress(
 
 function getProgress(userId: string): ProgressState | null {
   const progress = progressMap.get(userId);
-  // Alte Progress-States (Ã¤lter als 5 Minuten) entfernen
+  // Alte Progress-States (älter als 5 Minuten) entfernen
   if (progress && Date.now() - progress.timestamp > 5 * 60 * 1000) {
     progressMap.delete(userId);
     return null;
@@ -70,7 +70,7 @@ function getProgress(userId: string): ProgressState | null {
 }
 
 export const mealPlansRouter = router({
-  // ErnÃ¤hrungsplan mit KI generieren
+  // Ernährungsplan mit KI generieren
   generate: protectedProcedure
     .input(
       z.object({
@@ -84,10 +84,10 @@ export const mealPlansRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      // Rate Limiting prÃ¼fen
+      // Rate Limiting prüfen
       checkRateLimit(ctx.user.id);
 
-      // Monatliches Plan-Limit basierend auf Abo-Plan prÃ¼fen
+      // Monatliches Plan-Limit basierend auf Abo-Plan prüfen
       const org = await ctx.prisma.organization.findUniqueOrThrow({
         where: { id: ctx.organizationId },
       });
@@ -106,15 +106,15 @@ export const mealPlansRouter = router({
         });
       }
 
-      // Testphase prÃ¼fen
+      // Testphase prüfen
       if (org.subscriptionPlan === "TRIAL" && org.trialEndsAt && org.trialEndsAt < new Date()) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message: "Ihre Testphase ist abgelaufen. Bitte wÃ¤hlen Sie einen Plan unter /billing.",
+          message: "Ihre Testphase ist abgelaufen. Bitte wählen Sie einen Plan unter /billing.",
         });
       }
 
-      // Patient laden und Berechtigung prÃ¼fen
+      // Patient laden und Berechtigung prüfen
       const patient = await ctx.prisma.patient.findUnique({
         where: { id: input.patientId },
       });
@@ -134,7 +134,7 @@ export const mealPlansRouter = router({
         });
       }
 
-      // ZusÃ¤tzliche Hinweise zusammenbauen
+      // Zusätzliche Hinweise zusammenbauen
       let notes = input.additionalNotes || "";
 
       if (input.basedOnPreviousPlan) {
@@ -157,7 +157,7 @@ export const mealPlansRouter = router({
       if (agreement) {
         const parts: string[] = [];
         if (agreement.canPortionIndependent) {
-          parts.push("Darf vollstÃ¤ndig eigenstÃ¤ndig portionieren");
+          parts.push("Darf vollständig eigenständig portionieren");
         } else if (agreement.canPortionSupervised) {
           parts.push("Darf unter Aufsicht portionieren");
         }
@@ -235,11 +235,11 @@ export const mealPlansRouter = router({
       return { id: mealPlan.id };
     }),
 
-  // Alle PlÃ¤ne eines Patienten
+  // Alle Pläne eines Patienten
   getByPatient: protectedProcedure
     .input(z.object({ patientId: z.string() }))
     .query(async ({ ctx, input }) => {
-      // Sicherheitshinweis: ZunÃ¤chst prÃ¼fen ob Patient zur Organisation gehÃ¶rt
+      // Sicherheitshinweis: Zunächst prüfen ob Patient zur Organisation gehört
       const patient = await ctx.prisma.patient.findUnique({
         where: { id: input.patientId },
         select: { organizationId: true },
@@ -266,7 +266,7 @@ export const mealPlansRouter = router({
       });
     }),
 
-  // Alle PlÃ¤ne der eigenen Organisation (z. B. fÃ¼r Ãœbersichtsseite)
+  // Alle Pläne der eigenen Organisation (z. B. für Übersichtsseite)
   list: protectedProcedure
     .input(
       z
@@ -332,7 +332,7 @@ export const mealPlansRouter = router({
       if (!plan) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "ErnÃ¤hrungsplan nicht gefunden.",
+          message: "Ernährungsplan nicht gefunden.",
         });
       }
 
@@ -354,7 +354,7 @@ export const mealPlansRouter = router({
       if (!day || !meal) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "UngÃ¼ltiger Tag oder Mahlzeit.",
+          message: "Ungültiger Tag oder Mahlzeit.",
         });
       }
 
@@ -402,11 +402,11 @@ export const mealPlansRouter = router({
       if (!plan) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "ErnÃ¤hrungsplan nicht gefunden.",
+          message: "Ernährungsplan nicht gefunden.",
         });
       }
 
-      // Sicherheitshinweis: Organization-Check Ã¼ber Patient-Relation
+      // Sicherheitshinweis: Organization-Check über Patient-Relation
       if (plan.patient.organizationId !== ctx.organizationId) {
         throw new TRPCError({
           code: "FORBIDDEN",

@@ -161,7 +161,7 @@ export function MealPlanPdfDocument({
         </View>
 
         {/* Meta-Informationen */}
-        <Text style={styles.subtitle}>Ernaehrungsplan</Text>
+        <Text style={styles.subtitle}>Ernährungsplan</Text>
         <View style={styles.metaRow}>
           <Text style={styles.metaItem}>Patient: {patientPseudonym}</Text>
           <Text style={styles.metaItem}>

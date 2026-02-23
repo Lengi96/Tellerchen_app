@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
 });
 
 const categoryEmojis: Record<string, string> = {
-  "Gemüse & Obst": "Gemuese & Obst",
+  "Gemüse & Obst": "Gemüse & Obst",
   Protein: "Protein",
   Milchprodukte: "Milchprodukte",
   Kohlenhydrate: "Kohlenhydrate",

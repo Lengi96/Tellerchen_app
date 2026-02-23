@@ -43,13 +43,13 @@ export function LandingShowcase() {
         <div className="mt-10 grid grid-cols-1 gap-5 lg:grid-cols-3">
           <ShowcaseCard
             title="Card A"
-            subtitle="Prozess-Fuehrung Schritt 1 bis 3"
+            subtitle="Prozess-Führung Schritt 1 bis 3"
           >
             <div className="space-y-3">
               {[
                 { icon: ClipboardList, label: "Schritt 1", text: "Profil und Randbedingungen erfassen" },
-                { icon: UtensilsCrossed, label: "Schritt 2", text: "KI-Planvorschlag pruefen und anpassen" },
-                { icon: CheckCircle2, label: "Schritt 3", text: "Freigeben und Einkauf uebergeben" },
+                { icon: UtensilsCrossed, label: "Schritt 2", text: "KI-Planvorschlag prüfen und anpassen" },
+                { icon: CheckCircle2, label: "Schritt 3", text: "Freigeben und Einkauf übergeben" },
               ].map((step) => (
                 <div
                   key={step.label}
@@ -84,7 +84,7 @@ export function LandingShowcase() {
                 Linsencurry mit Reis
               </h3>
               <p className="mt-2 text-sm text-[#54635E]">
-                Rote Linsen, Kokosmilch, Karotte und Basmatireis. Warm, saettigend und planbar.
+                Rote Linsen, Kokosmilch, Karotte und Basmatireis. Warm, sättigend und planbar.
               </p>
               <div className="mt-4 flex flex-wrap gap-2 text-xs">
                 <span className="rounded-lg bg-white px-2 py-1 text-[#3F4B48]">Protein 28 g</span>
@@ -96,7 +96,7 @@ export function LandingShowcase() {
 
           <ShowcaseCard
             title="Card C"
-            subtitle="Handover-Dashboard fuer Mitarbeiter"
+            subtitle="Handover-Dashboard für Mitarbeiter"
           >
             <div className="space-y-3 rounded-2xl border border-[#E4ECE7] bg-[#F7FAF8] p-4">
               <div className="flex items-center justify-between rounded-xl bg-white p-3">
@@ -116,7 +116,7 @@ export function LandingShowcase() {
               </div>
               <div className="flex items-center gap-2 rounded-xl bg-[#2D6A4F]/10 p-3 text-sm font-medium text-[#2D6A4F]">
                 <Handshake className="h-4 w-4" />
-                Uebergabe dokumentiert und nachvollziehbar.
+                Übergabe dokumentiert und nachvollziehbar.
               </div>
             </div>
           </ShowcaseCard>
