@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
@@ -14,14 +14,14 @@ export const metadata: Metadata = {
     template: "%s | NutriKompass",
   },
   description:
-    "KI-gestützte Ernährungsplanung für Einrichtungen. Individuelle 1- bis 14-Tage-Pläne, automatische Einkaufslisten und PDF-Export. DSGVO-konform.",
+    "NutriKompass ist die KI-gestützte Ernährungsplanung für Einrichtungen: flexible 1- bis 14-Tage-Pläne, detaillierte Rezepte, automatische Einkaufslisten und PDF-Export.",
   icons: {
     icon: "/favicon.svg",
   },
   openGraph: {
     title: "NutriKompass – KI-gestützte Ernährungsplanung",
     description:
-      "Individuelle Ernährungspläne per Knopfdruck. Für Einrichtungen, die Menschen mit Essstörungen betreuen.",
+      "Für Einrichtungen, die strukturierte Ernährungsplanung brauchen: KI-Planvorschläge, Team-Handover, Einkaufslisten und PDF-Export.",
     type: "website",
     locale: "de_DE",
     siteName: "NutriKompass",
