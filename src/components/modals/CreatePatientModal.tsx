@@ -147,7 +147,7 @@ export function CreatePatientModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg rounded-xl">
+      <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto rounded-xl">
         <DialogHeader>
           <DialogTitle className="text-text-main">
             Neue Bewohner:in anlegen
