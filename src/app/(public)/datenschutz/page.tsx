@@ -22,18 +22,18 @@ export default function DatenschutzPage() {
         <section className="mb-10">
           <h2 className="text-xl font-semibold mb-3">1. Verantwortlicher</h2>
           <p className="text-gray-700 leading-relaxed">
-            [Vor- und Nachname / Firmenname]
+            Christoph Lengowski
             <br />
-            [Stra&szlig;e und Hausnummer]
+            Adreystra&szlig;e 116
             <br />
-            [PLZ Ort]
+            44225 Dortmund
             <br />
-            E-Mail: info@nutrikompass.de
+            E-Mail: c.lengowski@yahoo.de
           </p>
           <p className="text-gray-700 leading-relaxed mt-2">
             Bei Fragen zum Datenschutz wenden Sie sich bitte an die oben
             genannte Adresse oder per E-Mail an{" "}
-            <span className="text-[#2D6A4F]">datenschutz@nutrikompass.de</span>.
+            <span className="text-[#2D6A4F]">c.lengowski@yahoo.de</span>.
           </p>
         </section>
 
