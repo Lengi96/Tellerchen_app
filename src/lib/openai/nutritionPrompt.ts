@@ -191,8 +191,90 @@ function findVarietyIssues(days: DayPlanData[]): number[] {
   return Array.from(badDays.values()).sort((a, b) => a - b);
 }
 
-function buildFallbackRecipe(mealName: string): string {
-  return `Alle Zutaten exakt abwiegen (z. B. 180 g Beilage, 120 g Proteinquelle, 150 g Gemüse, 1 EL Öl) und griffbereit stellen; Beilage nach Packungsangabe garen und dabei die Garzeit auf 10-12 Minuten timen; Proteinquelle in einer beschichteten Pfanne mit 1 EL Öl bei mittlerer Hitze 4-6 Minuten anbraten und einmal wenden; Gemüse zugeben, 50 ml Wasser oder Sauce einrühren und weitere 6-8 Minuten sanft garen; Mit Salz, Pfeffer und Kräutern abschmecken, dann alles portionsgerecht anrichten; Tipp: Für ${mealName} die Sauce erst am Ende zugeben, damit Konsistenz und Nährstoffe erhalten bleiben.`;
+function buildContextualKitchenTip(meal: Pick<MealData, "mealType" | "name" | "ingredients">): string {
+  const name = normalizeMealName(meal.name);
+  const ingredientNames = meal.ingredients.map((i) => normalizeMealName(i.name));
+  const has = (pattern: RegExp) =>
+    pattern.test(name) || ingredientNames.some((n) => pattern.test(n));
+
+  if (has(/\bovernight\b|\boats\b|hafer/)) {
+    return "Overnight-Oats über Nacht gut quellen lassen und morgens erst kurz vor dem Servieren Obst oder Toppings unterheben, damit die Konsistenz cremig bleibt.";
+  }
+  if (has(/\bjoghurt\b|quark/)) {
+    return "Kalte Komponenten erst direkt vor dem Servieren mischen, damit Joghurt oder Quark nicht wässrig werden.";
+  }
+  if (has(/\bpasta\b|nudel/)) {
+    return "Nudeln 1 Minute vor Ende der Packungszeit prüfen und mit etwas Kochwasser zur Sauce geben, damit alles besser bindet.";
+  }
+  if (has(/\breis\b/)) {
+    return "Reis nach dem Garen 5 Minuten zugedeckt ziehen lassen und erst dann lockern, damit die Körner nicht brechen.";
+  }
+  if (has(/curry/)) {
+    return "Gewürze kurz im heißen Öl anrösten, bevor Flüssigkeit dazukommt, damit das Curry aromatischer wird.";
+  }
+  if (has(/omelett|r[uü]hrei|ei/)) {
+    return "Eierspeisen bei mittlerer bis niedriger Hitze stocken lassen und nicht zu lange garen, damit sie saftig bleiben.";
+  }
+  if (has(/wrap/)) {
+    return "Wraps kurz trocken anwärmen und feuchte Zutaten erst zum Schluss einfüllen, damit sie beim Rollen nicht reißen.";
+  }
+  if (has(/salat|couscous/)) {
+    return "Dressing erst kurz vor dem Servieren zugeben, damit Gemüse und Kräuter frisch und bissfest bleiben.";
+  }
+  if (has(/brot|toast/)) {
+    return "Brotkomponenten getrennt vorbereiten und feuchte Aufstriche erst direkt vor dem Essen auftragen, damit nichts durchweicht.";
+  }
+  if (meal.mealType === "Snack") {
+    return "Snack-Portionen direkt abwiegen und in kleinen Schalen anrichten, damit die Menge im Alltag leichter eingehalten wird.";
+  }
+
+  return `Für ${meal.name} zuerst alle Zutaten abwiegen und in der Reihenfolge der Garzeiten verarbeiten, damit die Portion gleichmäßig gelingt.`;
+}
+
+function buildFallbackRecipe(meal: Pick<MealData, "mealType" | "name" | "ingredients">): string {
+  return `Alle Zutaten exakt abwiegen (z. B. 180 g Beilage, 120 g Proteinquelle, 150 g Gemüse, 1 EL Öl) und griffbereit stellen; Beilage nach Packungsangabe garen und dabei die Garzeit auf 10-12 Minuten timen; Proteinquelle in einer beschichteten Pfanne mit 1 EL Öl bei mittlerer Hitze 4-6 Minuten anbraten und einmal wenden; Gemüse zugeben, 50 ml Wasser oder Sauce einrühren und weitere 6-8 Minuten sanft garen; Mit Salz, Pfeffer und Kräutern abschmecken, dann alles portionsgerecht anrichten; Tipp: ${buildContextualKitchenTip(meal)}`;
+}
+
+function replaceOrAppendTip(recipe: string, meal: Pick<MealData, "mealType" | "name" | "ingredients">): string {
+  const steps = recipe
+    .split(/;|\n/)
+    .map((step) => step.trim())
+    .filter((step) => step.length > 0);
+
+  if (steps.length === 0) {
+    return `Tipp: ${buildContextualKitchenTip(meal)}`;
+  }
+
+  const genericTipPattern =
+    /^tipp:\s*(f[üu]r .* die sauce erst am ende zugeben|die sauce erst am ende zugeben)/i;
+  const lastIndex = steps.length - 1;
+  const lastStep = steps[lastIndex];
+
+  if (/^tipp:/i.test(lastStep)) {
+    if (genericTipPattern.test(lastStep)) {
+      steps[lastIndex] = `Tipp: ${buildContextualKitchenTip(meal)}`;
+    }
+  } else {
+    steps.push(`Tipp: ${buildContextualKitchenTip(meal)}`);
+  }
+
+  return steps.join("; ");
+}
+
+function improveRecipeTips(plan: MealPlanData): MealPlanData {
+  return {
+    days: plan.days.map((day) => ({
+      ...day,
+      meals: day.meals.map((meal) => ({
+        ...meal,
+        recipe: replaceOrAppendTip(recipeToString(meal.recipe), meal),
+      })),
+    })),
+  };
+}
+
+function recipeToString(recipe: string): string {
+  return typeof recipe === "string" ? recipe : "";
 }
 
 function createFallbackMeal(
@@ -213,7 +295,16 @@ function createFallbackMeal(
     mealType,
     name: mealName,
     description: "Ausgewogene, alltagstaugliche Mahlzeit mit klarer Zubereitung.",
-    recipe: buildFallbackRecipe(mealName),
+    recipe: buildFallbackRecipe({
+      mealType,
+      name: mealName,
+      ingredients: [
+        { name: "Hauptzutat", amount: 180, unit: "g" as const, category: "Kohlenhydrate" as const },
+        { name: "Gemüse", amount: 150, unit: "g" as const, category: "Gemüse & Obst" as const },
+        { name: "Proteinquelle", amount: 120, unit: "g" as const, category: "Protein" as const },
+        { name: "Öl", amount: 1, unit: "EL" as const, category: "Sonstiges" as const },
+      ],
+    }),
     kcal,
     protein: Math.round(kcal * 0.2 / 4),
     carbs: Math.round(kcal * 0.5 / 4),
@@ -353,7 +444,7 @@ Regeln:
 - Zutaten alltagstauglich in Deutschland.
 - Rezept je Mahlzeit mit klaren Arbeitsschritten, Zeitangaben und Hitzehinweisen (z. B. mittlere Hitze, 8 Minuten).
 - In jedem Rezept konkrete Mengen aus den Zutaten verwenden (z. B. 120 g, 1 EL, 200 ml).
-- Letzter Rezeptschritt beginnt immer mit "Tipp:" und gibt einen praktischen Zubereitungshinweis.
+- Letzter Rezeptschritt beginnt immer mit "Tipp:" und gibt einen praktischen, gerichtsspezifischen Zubereitungshinweis (kein generischer Standardsatz, keine Wiederholung derselben Formulierung über mehrere Gerichte).
 - ${fixedMealTypes.length > 0 ? `Diese Mahlzeiten müssen jeden Tag identisch sein (Name, Rezept, Zutaten): ${fixedMealTypes.join(", ")}.` : "Wenn keine fixen Mahlzeiten vorgegeben sind, variiere die Gerichte über die Tage."}
 - Allergien strikt beachten.
 - Kein Zusatztext, kein Markdown, keine Codeblöcke.`;
@@ -411,6 +502,7 @@ Erstelle den vollständigen ${numDays}-Tage-Plan in genau einem JSON-Objekt im g
   }
 
   parsedPlan = applyFixedMealTypes(parsedPlan, fixedMealTypes);
+  parsedPlan = improveRecipeTips(parsedPlan);
   findVarietyIssues(parsedPlan.days);
 
   const result = mealPlanSchema.safeParse(parsedPlan);
