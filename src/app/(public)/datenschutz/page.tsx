@@ -187,6 +187,45 @@ export default function DatenschutzPage() {
           </p>
         </section>
 
+        {/* ── 6a. Zahlungsabwicklung ──────────────────────────── */}
+        <section className="mb-10">
+          <h2 className="text-xl font-semibold mb-3">
+            6a. Zahlungsabwicklung (Stripe)
+          </h2>
+          <p className="text-gray-700 leading-relaxed">
+            F&uuml;r die Abwicklung von Abonnements und Zahlungen nutzen wir
+            den Dienst <strong>Stripe</strong> (Stripe Payments Europe, Ltd.,
+            1 Grand Canal Street Lower, Grand Canal Dock, Dublin, D02 H210,
+            Irland / Stripe, Inc., 510 Townsend Street, San Francisco,
+            CA&nbsp;94103, USA).
+          </p>
+          <p className="text-gray-700 leading-relaxed mt-2">
+            Stripe verarbeitet Zahlungsdaten (z.&thinsp;B. Kreditkarteninformationen,
+            Rechnungsadresse) ausschlie&szlig;lich zum Zweck der
+            Zahlungsabwicklung und Abonnementverwaltung. Wir selbst speichern
+            keine vollst&auml;ndigen Zahlungsmitteldaten &ndash; diese werden
+            direkt und verschl&uuml;sselt von Stripe entgegengenommen.
+          </p>
+          <p className="text-gray-700 leading-relaxed mt-2">
+            Die Verarbeitung erfolgt auf Grundlage von Art.&thinsp;6
+            Abs.&thinsp;1 lit.&thinsp;b DSGVO (Vertragserf&uuml;llung). F&uuml;r
+            Daten&uuml;bermittlungen in die USA gelten die
+            EU-Standardvertragsklauseln gem. Art.&thinsp;46 Abs.&thinsp;2
+            lit.&thinsp;c DSGVO. Ein Auftragsverarbeitungsvertrag (DPA) mit
+            Stripe ist abgeschlossen. Weitere Informationen zur
+            Datenverarbeitung durch Stripe finden Sie unter{" "}
+            <a
+              href="https://stripe.com/de/privacy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#2D6A4F] hover:underline"
+            >
+              stripe.com/de/privacy
+            </a>
+            .
+          </p>
+        </section>
+
         {/* ── 7. Cookies & Local Storage ──────────────────────── */}
         <section className="mb-10">
           <h2 className="text-xl font-semibold mb-3">

@@ -1,5 +1,6 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { withSentryConfig } from "@sentry/nextjs";
 
 /** @type {import('next').NextConfig} */
 const isDev = process.env.NODE_ENV !== "production";
@@ -15,6 +16,9 @@ function buildCsp() {
     "https://api.openai.com",
     "https://api.stripe.com",
     "https://checkout.stripe.com",
+    // Sentry error reporting
+    "https://*.sentry.io",
+    "https://o*.ingest.sentry.io",
   ];
   if (isDev) {
     connectSrc.push("ws:", "wss:");
@@ -99,4 +103,20 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+  // Sentry organisation / project (aus Sentry-Dashboard)
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+
+  // Sourcemaps in CI hochladen (nur wenn Auth-Token gesetzt)
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+
+  // Sourcemaps nicht im Client-Bundle ausliefern
+  hideSourceMaps: true,
+
+  // Sentry-Telemetrie über Builds deaktivieren
+  telemetry: false,
+
+  // Kein Sentry-Bundler wenn DSN nicht gesetzt (z.B. lokal ohne Sentry)
+  silent: !process.env.NEXT_PUBLIC_SENTRY_DSN,
+});

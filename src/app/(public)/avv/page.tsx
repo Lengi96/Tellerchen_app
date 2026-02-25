@@ -622,6 +622,44 @@ export default function AVVPage() {
                 (transient), keine Patientendaten direkt
               </p>
             </div>
+
+            {/* Stripe */}
+            <div className="rounded-xl border border-gray-200 bg-white p-5">
+              <div className="flex items-start justify-between gap-4 flex-wrap">
+                <div>
+                  <p className="font-semibold text-[#1A1A2E]">
+                    Stripe Payments Europe, Ltd. / Stripe, Inc.
+                  </p>
+                  <p className="text-sm text-gray-500 mt-0.5">
+                    1 Grand Canal Street Lower, Dublin, Irland /
+                    510 Townsend Street, San Francisco, CA 94103, USA
+                  </p>
+                </div>
+                <span className="shrink-0 rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold text-indigo-700">
+                  Zahlungsabwicklung
+                </span>
+              </div>
+              <p className="text-sm text-gray-700 mt-3">
+                <strong>Zweck:</strong> Abonnementverwaltung und
+                Zahlungsabwicklung (Kreditkarte, SEPA) f&uuml;r den SaaS-Dienst
+              </p>
+              <p className="text-sm text-gray-700 mt-1">
+                <strong>Serverstandort:</strong> EU (Irland) und USA
+              </p>
+              <p className="text-sm text-gray-700 mt-1">
+                <strong>Rechtsgrundlage:</strong>{" "}
+                Art.&thinsp;6 Abs.&thinsp;1 lit.&thinsp;b DSGVO
+                (Vertragserf&uuml;llung); EU-Standardvertragsklauseln gem.
+                Art.&thinsp;46 Abs.&thinsp;2 lit.&thinsp;c DSGVO;
+                Stripe DPA (Data Processing Agreement) abgeschlossen
+              </p>
+              <p className="text-sm text-gray-700 mt-1">
+                <strong>Datenkategorien:</strong> Rechnungsadresse,
+                Zahlungsmitteldaten (Kreditkartendaten werden nicht beim
+                Auftragnehmer gespeichert, sondern direkt von Stripe
+                verarbeitet); keine Patientendaten
+              </p>
+            </div>
           </div>
         </div>
 
