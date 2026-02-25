@@ -1,4 +1,77 @@
 /** @type {import('next').NextConfig} */
+const isDev = process.env.NODE_ENV !== "production";
+
+function buildCsp() {
+  const scriptSrc = ["'self'", "'unsafe-inline'"];
+  if (isDev) scriptSrc.push("'unsafe-eval'");
+
+  const connectSrc = [
+    "'self'",
+    "https://api.openai.com",
+    "https://api.stripe.com",
+    "https://checkout.stripe.com",
+  ];
+  if (isDev) {
+    connectSrc.push("ws:", "wss:");
+  }
+
+  const directives = [
+    "default-src 'self'",
+    "base-uri 'self'",
+    "form-action 'self' https://checkout.stripe.com",
+    "frame-ancestors 'none'",
+    "object-src 'none'",
+    `script-src ${scriptSrc.join(" ")}`,
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "font-src 'self' data: https://fonts.gstatic.com",
+    "img-src 'self' data: blob:",
+    `connect-src ${connectSrc.join(" ")}`,
+    "frame-src 'self' https://js.stripe.com https://checkout.stripe.com",
+  ];
+
+  if (!isDev) {
+    directives.push("upgrade-insecure-requests");
+  }
+
+  return directives.join("; ");
+}
+
+const securityHeaders = [
+  {
+    key: "X-Frame-Options",
+    value: "DENY",
+  },
+  {
+    key: "X-Content-Type-Options",
+    value: "nosniff",
+  },
+  {
+    key: "Referrer-Policy",
+    value: "strict-origin-when-cross-origin",
+  },
+  {
+    key: "X-XSS-Protection",
+    value: "0",
+  },
+  {
+    key: "Permissions-Policy",
+    value:
+      "accelerometer=(), ambient-light-sensor=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(self), usb=()",
+  },
+  {
+    key: "Content-Security-Policy",
+    value: buildCsp(),
+  },
+  ...(!isDev
+    ? [
+        {
+          key: "Strict-Transport-Security",
+          value: "max-age=63072000; includeSubDomains; preload",
+        },
+      ]
+    : []),
+];
+
 const nextConfig = {
   // ESM-Pakete die per dynamic import geladen werden
   experimental: {
@@ -9,40 +82,7 @@ const nextConfig = {
     return [
       {
         source: "/(.*)",
-        headers: [
-          {
-            key: "X-Frame-Options",
-            value: "DENY",
-          },
-          {
-            key: "X-Content-Type-Options",
-            value: "nosniff",
-          },
-          {
-            key: "Referrer-Policy",
-            value: "strict-origin-when-cross-origin",
-          },
-          {
-            key: "X-XSS-Protection",
-            value: "1; mode=block",
-          },
-          {
-            key: "Content-Security-Policy",
-            value: [
-              "default-src 'self'",
-              "base-uri 'self'",
-              "form-action 'self' https://checkout.stripe.com",
-              "frame-ancestors 'none'",
-              "object-src 'none'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-              "font-src 'self' data: https://fonts.gstatic.com",
-              "img-src 'self' data: blob:",
-              "connect-src 'self' ws: wss: https://api.openai.com https://api.stripe.com https://checkout.stripe.com",
-              "frame-src 'self' https://js.stripe.com https://checkout.stripe.com",
-            ].join("; "),
-          },
-        ],
+        headers: securityHeaders,
       },
     ];
   },

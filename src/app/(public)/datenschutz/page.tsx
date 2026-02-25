@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { LEGAL, legalMailto } from "@/config/legal";
 
 export default function DatenschutzPage() {
   return (
@@ -22,18 +23,18 @@ export default function DatenschutzPage() {
         <section className="mb-10">
           <h2 className="text-xl font-semibold mb-3">1. Verantwortlicher</h2>
           <p className="text-gray-700 leading-relaxed">
-            Christoph Lengowski
+            {LEGAL.operator.name}
             <br />
-            Adreystra&szlig;e 116
+            {LEGAL.operator.addressLine1}
             <br />
-            44225 Dortmund
+            {LEGAL.operator.postalCode} {LEGAL.operator.city}
             <br />
-            E-Mail: c.lengowski@yahoo.de
+            E-Mail: {LEGAL.operator.email}
           </p>
           <p className="text-gray-700 leading-relaxed mt-2">
             Bei Fragen zum Datenschutz wenden Sie sich bitte an die oben
             genannte Adresse oder per E-Mail an{" "}
-            <span className="text-[#2D6A4F]">c.lengowski@yahoo.de</span>.
+            <span className="text-[#2D6A4F]">{LEGAL.operator.email}</span>.
           </p>
         </section>
 
@@ -116,7 +117,7 @@ export default function DatenschutzPage() {
             Soweit Einrichtungen (Nutzer des Dienstes) im Rahmen von
             mein-nutrikompass.de personenbezogene Daten von Patienten
             verarbeiten, handeln Sie als <strong>Verantwortliche</strong> im
-            Sinne der DSGVO. Christoph Lengowski / mein-nutrikompass.de agiert
+            Sinne der DSGVO. {LEGAL.operator.name} / mein-nutrikompass.de agiert
             dabei als <strong>Auftragsverarbeiter</strong> gem. Art.&thinsp;6
             Abs.&thinsp;4, Art.&thinsp;28 DSGVO.
           </p>
@@ -126,10 +127,10 @@ export default function DatenschutzPage() {
             eingegeben werden. Ein <strong>AVV kann per E-Mail angefordert
             werden</strong>:{" "}
             <a
-              href="mailto:c.lengowski@yahoo.de?subject=AVV-Anfrage mein-nutrikompass.de"
+              href={legalMailto(LEGAL.mailSubjects.avvRequest)}
               className="text-[#2D6A4F] hover:underline"
             >
-              c.lengowski@yahoo.de
+              {LEGAL.operator.email}
             </a>
             . Der AVV wird vor oder mit der Freischaltung des Produktivbetriebs
             bereitgestellt.
@@ -151,14 +152,14 @@ export default function DatenschutzPage() {
               Um den AVV rechtsverbindlich zu unterzeichnen, senden Sie eine
               E-Mail an{" "}
               <a
-                href="mailto:c.lengowski@yahoo.de?subject=AVV-Abschluss mein-nutrikompass.de"
+                href={legalMailto(LEGAL.mailSubjects.avvExecution)}
                 className="font-medium text-[#2D6A4F] underline underline-offset-2"
               >
-                c.lengowski@yahoo.de
+                {LEGAL.operator.email}
               </a>{" "}
               mit dem Betreff &bdquo;AVV-Abschluss&ldquo;. Sie erhalten eine
               gegengezeichnete Ausfertigung in der Regel innerhalb von
-              2&nbsp;Werktagen.
+              {LEGAL.responseTargets.avvCounterSignedBusinessDays}.
             </p>
           </div>
         </section>

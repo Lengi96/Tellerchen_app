@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { LEGAL, legalMailto } from "@/config/legal";
 
 export default function AGBPage() {
   return (
@@ -24,8 +25,9 @@ export default function AGBPage() {
           <p className="text-gray-700 leading-relaxed">
             Diese Allgemeinen Gesch&auml;ftsbedingungen (AGB) gelten f&uuml;r
             die Nutzung des webbasierten Dienstes mein-nutrikompass.de (nachfolgend
-            &bdquo;Dienst&ldquo;), bereitgestellt von Christoph Lengowski,
-            Adreystra&szlig;e 116, 44225 Dortmund (nachfolgend &bdquo;Anbieter&ldquo;).
+            &bdquo;Dienst&ldquo;), bereitgestellt von {LEGAL.operator.name},{" "}
+            {LEGAL.operator.addressLine1}, {LEGAL.operator.postalCode} {LEGAL.operator.city}{" "}
+            (nachfolgend &bdquo;Anbieter&ldquo;).
           </p>
           <p className="text-gray-700 leading-relaxed mt-2">
             Mit der Registrierung oder Nutzung des Dienstes akzeptiert der
@@ -122,8 +124,8 @@ export default function AGBPage() {
             5. Preise und Zahlung
           </h2>
           <p className="text-gray-700 leading-relaxed">
-            Die angegebenen Preise verstehen sich inklusive der gesetzlichen
-            Mehrwertsteuer. Die Abrechnung erfolgt monatlich im Voraus. Der
+            Die angegebenen Preise verstehen sich als Endpreise.{" "}
+            {LEGAL.commercial.vatNotice} Die Abrechnung erfolgt monatlich im Voraus. Der
             Anbieter beh&auml;lt sich Preis&auml;nderungen mit einer
             Ank&uuml;ndigungsfrist von 30 Tagen vor.
           </p>
@@ -142,7 +144,7 @@ export default function AGBPage() {
             Der Vertrag wird auf unbestimmte Zeit geschlossen und kann von
             beiden Seiten mit einer Frist von 14 Tagen zum Ende des jeweiligen
             Abrechnungszeitraums gek&uuml;ndigt werden. Die K&uuml;ndigung
-            kann per E-Mail an c.lengowski@yahoo.de oder &uuml;ber die
+            kann per E-Mail an {LEGAL.operator.email} oder &uuml;ber die
             Kontoeinstellungen erfolgen.
           </p>
           <p className="text-gray-700 leading-relaxed mt-2">
@@ -186,10 +188,10 @@ export default function AGBPage() {
             </Link>
             . Zur rechtsverbindlichen Unterzeichnung wenden Sie sich an{" "}
             <a
-              href="mailto:c.lengowski@yahoo.de?subject=AVV-Abschluss mein-nutrikompass.de"
+              href={legalMailto(LEGAL.mailSubjects.avvExecution)}
               className="text-[#2D6A4F] hover:underline"
             >
-              c.lengowski@yahoo.de
+              {LEGAL.operator.email}
             </a>
             .
           </p>

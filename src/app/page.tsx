@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { LandingShowcase } from "@/components/landing/LandingShowcase";
+import { LEGAL, legalMailto } from "@/config/legal";
 import {
   Compass,
   Sparkles,
@@ -49,6 +50,12 @@ export default function LandingPage() {
         "Ja. Informationen zur Auftragsverarbeitung erhalten Sie über den Support und in den Vertragsunterlagen.",
     },
   ];
+
+  const testimonials = [
+    "Die Wochenplanung hat uns früher viel Zeit gekostet und war oft abhängig von einzelnen Mitarbeitenden. Mit Nutrikompass erstellen wir strukturierte, anpassbare Essenspläne in deutlich kürzerer Zeit. Das gibt uns im Alltag spürbar mehr Ruhe und Verlässlichkeit.",
+    "Besonders hilfreich ist für uns die automatisch generierte Einkaufsliste. Wir sparen nicht nur Planungszeit, sondern vermeiden auch Missverständnisse im Team. Die Vorschläge der KI sind eine gute Grundlage, die wir fachlich individuell anpassen.",
+    "Nutrikompass bringt Struktur in einen sensiblen Bereich unserer Arbeit. Wir behalten den Überblick über mehrere Patientinnen gleichzeitig und können die Pläne flexibel bearbeiten. Das entlastet unser Team organisatorisch, ohne unsere therapeutische Verantwortung zu ersetzen.",
+  ] as const;
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] pb-20 text-[#1A1A2E] md:pb-0">
@@ -143,7 +150,7 @@ export default function LandingPage() {
               14 Tage unverbindlich testen
             </Link>
             <a
-              href="mailto:c.lengowski@yahoo.de?subject=Demo-Anfrage mein-nutrikompass.de"
+              href={legalMailto(LEGAL.mailSubjects.demoRequest)}
               className="inline-flex items-center rounded-xl border border-[#2D6A4F] bg-white px-8 py-3.5 text-base font-semibold text-[#2D6A4F] transition-colors hover:bg-[#2D6A4F]/5"
             >
               Demo anfordern
@@ -488,7 +495,9 @@ export default function LandingPage() {
           <div className="mx-auto mt-8 max-w-4xl rounded-xl border border-gray-200 bg-[#F8F9FA] p-5 text-sm text-gray-700">
             <p className="font-semibold">Zahlungs- und Vertragsinformationen</p>
             <ul className="mt-3 space-y-2">
-              <li>Abrechnung monatlich. Alle Preise zzgl. gesetzlicher USt, sofern anwendbar.</li>
+              <li>
+                Abrechnung monatlich. Preise als Endpreise; {LEGAL.commercial.vatNotice}
+              </li>
               <li>Mindestlaufzeit, Kündigungsfrist und Verlängerung werden vor Abschluss transparent angezeigt.</li>
               <li>Zahlungsabwicklung erfolgt im Checkout über Stripe.</li>
               <li>
@@ -531,6 +540,43 @@ export default function LandingPage() {
         </div>
       </section>
 
+      <section
+        aria-labelledby="erfahrungen-aus-der-praxis"
+        className="bg-white py-20 sm:py-24"
+      >
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2D6A4F]">
+              Vertrauen im Alltag
+            </p>
+            <h2
+              id="erfahrungen-aus-der-praxis"
+              className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl"
+            >
+              Erfahrungen aus der Praxis
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-gray-600 sm:text-base">
+              Stimmen aus Einrichtungen, die Nutrikompass als organisatorische
+              Unterstützung im Planungsalltag nutzen.
+            </p>
+          </div>
+
+          <div className="mt-10 -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-1 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
+            {testimonials.map((quote, index) => (
+              <figure
+                key={index}
+                className="flex h-full w-[88%] shrink-0 snap-start flex-col rounded-2xl border border-gray-200 bg-[#F8F9FA] p-6 shadow-sm sm:w-auto sm:shrink"
+              >
+                <div className="mb-4 h-px w-14 bg-[#2D6A4F]/30" />
+                <blockquote className="text-sm leading-7 text-gray-700">
+                  &bdquo;{quote}&ldquo;
+                </blockquote>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="border-y border-gray-200 bg-white py-20">
         <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold sm:text-4xl">
@@ -548,7 +594,7 @@ export default function LandingPage() {
               14 Tage kostenlos testen
             </Link>
             <a
-              href="mailto:c.lengowski@yahoo.de?subject=Demo-Anfrage mein-nutrikompass.de"
+              href={legalMailto(LEGAL.mailSubjects.demoRequest)}
               className="inline-flex items-center justify-center rounded-xl border border-[#2D6A4F] bg-white px-8 py-3 text-sm font-semibold text-[#2D6A4F] transition-colors hover:bg-[#2D6A4F]/5"
             >
               Demo anfordern
@@ -578,6 +624,9 @@ export default function LandingPage() {
               <Link href="/agb" className="transition-colors hover:text-[#2D6A4F]">
                 AGB
               </Link>
+              <Link href="/avv" className="transition-colors hover:text-[#2D6A4F]">
+                AVV
+              </Link>
             </div>
 
             <p className="text-sm text-gray-500">&copy; {new Date().getFullYear()} mein-nutrikompass.de. Alle Rechte vorbehalten.</p>
@@ -599,5 +648,3 @@ export default function LandingPage() {
     </div>
   );
 }
-
-

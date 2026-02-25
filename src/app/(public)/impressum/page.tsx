@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { LEGAL } from "@/config/legal";
 
 export default function ImpressumPage() {
   return (
@@ -20,34 +21,34 @@ export default function ImpressumPage() {
             Angaben gem&auml;&szlig; &sect; 5 TMG
           </h2>
           <p className="text-gray-700 leading-relaxed">
-            Christoph Lengowski
+            {LEGAL.operator.name}
             <br />
-            Adreystra&szlig;e 116
+            {LEGAL.operator.addressLine1}
             <br />
-            44225 Dortmund
+            {LEGAL.operator.postalCode} {LEGAL.operator.city}
             <br />
-            Deutschland
+            {LEGAL.operator.country}
           </p>
           <p className="text-gray-700 leading-relaxed mt-2">
             <strong>Vertreten durch:</strong>
             <br />
-            Christoph Lengowski
+            {LEGAL.operator.name}
           </p>
           <p className="text-gray-700 leading-relaxed mt-2">
-            <strong>Handelsregister:</strong> Keine Eintragung
+            <strong>Handelsregister:</strong> {LEGAL.commercial.tradeRegister}
             <br />
-            <strong>Registergericht:</strong> Entf&auml;llt
+            <strong>Registergericht:</strong> {LEGAL.commercial.registerCourt}
             <br />
-            <strong>Umsatzsteuer:</strong> Gem&auml;&szlig; &sect; 19 UStG wird keine Umsatzsteuer ausgewiesen.
+            <strong>Umsatzsteuer:</strong> {LEGAL.commercial.vatNotice}
           </p>
         </section>
 
         <section className="mb-8">
           <h2 className="text-xl font-semibold mb-3">Kontakt</h2>
           <p className="text-gray-700 leading-relaxed">
-            <strong>E-Mail:</strong> c.lengowski@yahoo.de
+            <strong>E-Mail:</strong> {LEGAL.operator.email}
             <br />
-            <strong>Telefon:</strong> 015111851677
+            <strong>Telefon:</strong> {LEGAL.operator.phone}
           </p>
         </section>
 
@@ -56,11 +57,11 @@ export default function ImpressumPage() {
             Verantwortlich f&uuml;r den Inhalt nach &sect; 55 Abs. 2 MStV
           </h2>
           <p className="text-gray-700 leading-relaxed">
-            Christoph Lengowski
+            {LEGAL.operator.name}
             <br />
-            Adreystra&szlig;e 116
+            {LEGAL.operator.addressLine1}
             <br />
-            44225 Dortmund
+            {LEGAL.operator.postalCode} {LEGAL.operator.city}
           </p>
         </section>
 

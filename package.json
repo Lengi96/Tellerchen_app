@@ -24,9 +24,12 @@
   ],
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "legal:check": "node --experimental-strip-types scripts/validate-legal-config.ts",
+    "env:check": "node --experimental-strip-types scripts/validate-env.ts",
+    "build": "npm run legal:check && npm run env:check && next build",
     "start": "next start",
     "lint": "next lint",
+    "test:smoke": "npx @playwright/test@1.53.2 test -c playwright.smoke.config.mjs",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",

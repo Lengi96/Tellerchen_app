@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
+import { LEGAL, legalMailto } from "@/config/legal";
 
 export const metadata: Metadata = {
   title: "Auftragsverarbeitungsvertrag (AVV)",
@@ -46,13 +47,13 @@ export default function AVVPage() {
             Bitte senden Sie eine ausgef&uuml;llte und unterzeichnete Version
             an{" "}
             <a
-              href="mailto:c.lengowski@yahoo.de?subject=AVV-Abschluss mein-nutrikompass.de"
+              href={legalMailto(LEGAL.mailSubjects.avvExecution)}
               className="font-medium text-[#2D6A4F] underline underline-offset-2"
             >
-              c.lengowski@yahoo.de
+              {LEGAL.operator.email}
             </a>
             . Sie erhalten eine gegengezeichnete Ausfertigung in der Regel
-            innerhalb von 2&nbsp;Werktagen.
+            innerhalb von {LEGAL.responseTargets.avvCounterSignedBusinessDays}.
           </p>
         </div>
 
@@ -90,13 +91,13 @@ export default function AVVPage() {
                 Auftragnehmer (Auftragsverarbeiter)
               </p>
               <p className="text-sm text-gray-700 leading-relaxed">
-                Christoph Lengowski
+                {LEGAL.operator.name}
                 <br />
-                Adreystra&szlig;e 116
+                {LEGAL.operator.addressLine1}
                 <br />
-                44225 Dortmund
+                {LEGAL.operator.postalCode} {LEGAL.operator.city}
                 <br />
-                E-Mail: c.lengowski@yahoo.de
+                E-Mail: {LEGAL.operator.email}
               </p>
               <p className="text-xs text-gray-400 mt-3">
                 (nachfolgend &bdquo;Auftragnehmer&ldquo; oder
@@ -476,7 +477,7 @@ export default function AVVPage() {
               </p>
               <div className="mt-8 border-b border-gray-300" />
               <p className="mt-1 text-xs text-gray-400">
-                Ort, Datum, Unterschrift, Christoph Lengowski
+                Ort, Datum, Unterschrift, {LEGAL.operator.name}
               </p>
             </div>
           </div>
@@ -832,7 +833,7 @@ export default function AVVPage() {
         {/* ── Stand ───────────────────────────────────────── */}
         <p className="text-sm text-gray-500 mt-12">
           Stand: Februar 2026 &middot; mein-nutrikompass.de &middot;
-          Christoph Lengowski, Dortmund
+          {LEGAL.operator.name}, {LEGAL.operator.city}
         </p>
 
         {/* ── Footer-Links ────────────────────────────────── */}
