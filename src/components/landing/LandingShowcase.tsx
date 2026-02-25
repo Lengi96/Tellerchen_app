@@ -42,8 +42,8 @@ export function LandingShowcase() {
 
         <div className="mt-10 grid grid-cols-1 gap-5 lg:grid-cols-3">
           <ShowcaseCard
-            title="Card A"
-            subtitle="Prozess-Führung Schritt 1 bis 3"
+            title="Planungsprozess"
+            subtitle="In 3 Schritten zu einem vollständigen Plan"
           >
             <div className="space-y-3">
               {[
@@ -56,7 +56,7 @@ export function LandingShowcase() {
                   className="flex items-start gap-3 rounded-2xl border border-[#E4ECE7] bg-[#F6FBF8] p-3"
                 >
                   <div className="rounded-xl bg-[#2D6A4F]/10 p-2 text-[#2D6A4F]">
-                    <step.icon className="h-4 w-4" />
+                    <step.icon aria-hidden="true" className="h-4 w-4" />
                   </div>
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-wide text-[#2D6A4F]">
@@ -70,8 +70,8 @@ export function LandingShowcase() {
           </ShowcaseCard>
 
           <ShowcaseCard
-            title="Card B"
-            subtitle="Beispiel Meal-Card"
+            title="Meal-Card"
+            subtitle="Tagesgenaue Nährwert- und Rezeptübersicht"
           >
             <div className="rounded-2xl border border-[#E4ECE7] bg-[#F7FAF8] p-4">
               <div className="mb-3 flex items-center justify-between">
@@ -95,13 +95,13 @@ export function LandingShowcase() {
           </ShowcaseCard>
 
           <ShowcaseCard
-            title="Card C"
-            subtitle="Handover-Dashboard für Mitarbeiter"
+            title="Handover-Dashboard"
+            subtitle="Übergabe strukturiert und nachvollziehbar"
           >
             <div className="space-y-3 rounded-2xl border border-[#E4ECE7] bg-[#F7FAF8] p-4">
               <div className="flex items-center justify-between rounded-xl bg-white p-3">
                 <div className="flex items-center gap-2 text-sm font-medium text-[#1A1A2E]">
-                  <Users className="h-4 w-4 text-[#2D6A4F]" />
+                  <Users aria-hidden="true" className="h-4 w-4 text-[#2D6A4F]" />
                   Schichtwechsel 14:00
                 </div>
                 <span className="rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">
@@ -115,7 +115,7 @@ export function LandingShowcase() {
                 Letztes Update von Teamleitung vor 12 Min.
               </div>
               <div className="flex items-center gap-2 rounded-xl bg-[#2D6A4F]/10 p-3 text-sm font-medium text-[#2D6A4F]">
-                <Handshake className="h-4 w-4" />
+                <Handshake aria-hidden="true" className="h-4 w-4" />
                 Übergabe dokumentiert und nachvollziehbar.
               </div>
             </div>

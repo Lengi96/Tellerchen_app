@@ -143,12 +143,11 @@ export default function LandingPage() {
               14 Tage unverbindlich testen
             </Link>
             <a
-              href="#loesung"
-              className="inline-flex items-center rounded-xl border border-gray-200 bg-white px-8 py-3.5 text-base font-semibold text-[#2D6A4F] transition-colors hover:bg-gray-50"
+              href="mailto:c.lengowski@yahoo.de?subject=Demo-Anfrage mein-nutrikompass.de"
+              className="inline-flex items-center rounded-xl border border-[#2D6A4F] bg-white px-8 py-3.5 text-base font-semibold text-[#2D6A4F] transition-colors hover:bg-[#2D6A4F]/5"
             >
-              So funktioniert es
+              Demo anfordern
             </a>
-
           </div>
           <p className="mt-4 text-xs text-gray-500">
             Kein Heilversprechen. Kein Ersatz für ärztliche Diagnose oder Behandlung.
@@ -535,26 +534,29 @@ export default function LandingPage() {
       <section className="border-y border-gray-200 bg-white py-20">
         <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold sm:text-4xl">
-            Struktur in die Ernährungsplanung bringen
+            Bereit für strukturierte Ernährungsplanung?
           </h2>
           <p className="mt-4 text-gray-600">
-            Starten Sie mit einem unverbindlichen Test und prüfen Sie, ob
-            mein-nutrikompass.de zu Ihrem Alltag passt.
+            Starten Sie direkt mit dem Test oder fordern Sie eine kurze Demo an —
+            wir zeigen Ihnen, wie mein-nutrikompass.de in Ihren Alltag passt.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/register"
-              className="inline-flex items-center justify-center rounded-xl bg-[#2D6A4F] px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#245640]"
+              className="inline-flex items-center justify-center rounded-xl bg-[#2D6A4F] px-8 py-3 text-sm font-semibold text-white shadow-md shadow-[#2D6A4F]/20 transition-colors hover:bg-[#245640]"
             >
-              14 Tage unverbindlich testen
+              14 Tage kostenlos testen
             </Link>
-            <Link
-              href="/impressum"
-              className="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-8 py-3 text-sm font-semibold text-[#2D6A4F] transition-colors hover:bg-gray-50"
+            <a
+              href="mailto:c.lengowski@yahoo.de?subject=Demo-Anfrage mein-nutrikompass.de"
+              className="inline-flex items-center justify-center rounded-xl border border-[#2D6A4F] bg-white px-8 py-3 text-sm font-semibold text-[#2D6A4F] transition-colors hover:bg-[#2D6A4F]/5"
             >
-              Kontakt aufnehmen
-            </Link>
+              Demo anfordern
+            </a>
           </div>
+          <p className="mt-4 text-xs text-gray-500">
+            Kein Verkaufsdruck. Antwort in der Regel innerhalb von 1 Werktag.
+          </p>
         </div>
       </section>
 
