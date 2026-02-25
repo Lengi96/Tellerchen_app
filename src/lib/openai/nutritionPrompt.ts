@@ -423,7 +423,7 @@ Format:
           "fat": number,
           "ingredients": [
             {
-              "name": "string",
+              "name": "konkreter Lebensmittelname, z. B. Hühnerbrust, Weißreis, Spinat, Olivenöl",
               "amount": number,
               "unit": "g" | "ml" | "Stück" | "EL" | "TL",
               "category": "Gemüse & Obst" | "Protein" | "Milchprodukte" | "Kohlenhydrate" | "Sonstiges"
@@ -442,6 +442,7 @@ Regeln:
 - Pro Tag genau 4 Mahlzeiten: Frühstück, Mittagessen, Abendessen, Snack.
 - dailyKcal mindestens 1800.
 - Zutaten alltagstauglich in Deutschland.
+- ingredients[].name MUSS ein spezifischer, konkreter Lebensmittelname sein (z. B. "Hühnerbrust", "Weißreis", "Blattspinat", "Olivenöl", "Magerquark", "Haferflocken"). NIEMALS generische Begriffe wie "Proteinquelle", "Hauptzutat", "Gemüse", "Öl", "Fleisch" oder ähnliche Kategorienamen verwenden.
 - Rezept je Mahlzeit mit klaren Arbeitsschritten, Zeitangaben und Hitzehinweisen (z. B. mittlere Hitze, 8 Minuten).
 - In jedem Rezept konkrete Mengen aus den Zutaten verwenden (z. B. 120 g, 1 EL, 200 ml).
 - Letzter Rezeptschritt beginnt immer mit "Tipp:" und gibt einen praktischen, gerichtsspezifischen Zubereitungshinweis (kein generischer Standardsatz, keine Wiederholung derselben Formulierung über mehrere Gerichte).
