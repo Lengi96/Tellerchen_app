@@ -1,5 +1,10 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 /** @type {import('next').NextConfig} */
 const isDev = process.env.NODE_ENV !== "production";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function buildCsp() {
   const scriptSrc = ["'self'", "'unsafe-inline'"];
@@ -73,6 +78,7 @@ const securityHeaders = [
 ];
 
 const nextConfig = {
+  outputFileTracingRoot: __dirname,
   // ESM-Pakete die per dynamic import geladen werden
   experimental: {
     esmExternals: "loose",
